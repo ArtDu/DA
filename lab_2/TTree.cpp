@@ -29,9 +29,15 @@ void TTree::Insert( char* key, unsigned long long &val ) {
 
 TNode* TTree::Insert( char* key, unsigned long long &val, TNode* &node ) {
     if( node == nullptr ) {
-        std::cout << "OK" << std::endl;
-        TNode* tmp = new TNode( key, val, 1 );
-        return tmp;
+        
+        try {
+            TNode* tmp = new TNode( key, val, 1 );
+            std::cout << "OK" << std::endl;
+            return tmp; 
+        } catch (const std::bad_alloc &) {
+            std::cout << "ERROR: not enough memory" << std::endl;
+            return nullptr;
+        }
     }
 
     if( strcmp(key, node->nodeData.key) == 0 ) {
@@ -147,19 +153,39 @@ void TTree::Save(FILE *file, TNode *node) {
 
 }
 
-void TTree::Load(FILE *file) {
-    TData tmp;
-    while ( fread( &tmp, sizeof(TData), 1, file ) == 1 ) {
+TTree& TTree::operator=(TTree& right) {
+    this->root = right.root;
+    return *this;
+}
 
+bool TTree::Load( FILE *file ) {
+    TData tmp;
+    while ( true ) {
+        int countDataRead = fread( &tmp, sizeof(TData), 1, file );
+        if( feof(file) ) {
+            if( countDataRead == 1 && ferror(file) == 0 ) {
+                root = Load( tmp.key, tmp.val, root );
+            }
+            return false;
+        }
+        if( countDataRead != 1 || ferror(file) ) {
+            
+            return true;
+        }
         root = Load( tmp.key, tmp.val, root );
     }
 }
 
 TNode* TTree::Load( char* key, unsigned long long &val, TNode* node ) {
     if( node == nullptr ) {
-
-        TNode* tmp = new TNode( key, val, 1 );
-        return tmp;
+        try {
+            TNode* tmp = new TNode( key, val, 1 );
+            return tmp;
+        } catch ( const std::bad_alloc & ) {
+            std::cout << "ERROR: not enough memory" << std::endl;
+            return nullptr;
+        }
+        
     }
 
     if( strcmp(key, node->nodeData.key) == 0 ) {
