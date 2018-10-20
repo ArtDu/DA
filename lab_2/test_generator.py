@@ -5,7 +5,7 @@ import string
 
 def get_random_key():
     str = ""
-    for i in range( 0, random.randint(1,2) ):
+    for i in range( 0, random.randint(1,256) ):
         str += random.choice( string.ascii_letters )
     return str
 
@@ -30,7 +30,7 @@ if __name__ == "__main__":
                 action = random.choice( actions )
                 if action == "+":
                     key = get_random_key()
-                    value = random.randint( 0, 100 )
+                    value = random.randint( 0, 2 ** 64 - 1 )
                     output_file.write("+ {0} {1}\n".format( key, value ))
                     key = key.lower()
                     # Если в нашем словаре уже есть такой ключ, то ответе должно быть 

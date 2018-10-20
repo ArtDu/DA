@@ -30,6 +30,9 @@ int main()
                 std::cin >> mod;
 
                 break;
+            case '3':
+                tree.Print();
+                break;
             default:
                 strcpy(key, action);
                 for(int i = 0; key[i]; i++){

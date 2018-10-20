@@ -60,6 +60,7 @@ TNode* TTree::Delete( char *key, TNode *&node ) {
     }
 
     if( strcmp(key, node->nodeData.key) == 0 ) {
+        std::cout << "OK" << std::endl;
         TNode* l = node->leftPtr;
         TNode* r = node->rightPtr;
         delete node;
@@ -106,4 +107,25 @@ void TTree::Search(char *key, TNode *node) {
     else {
         Search( key, node->rightPtr );
     }
+}
+
+void TTree::Print() {
+    Print(root, 0);
+}
+
+void TTree::Print(TNode *node, const int level) {
+
+    if ( node == nullptr ) {
+        return;
+    }
+
+    Print(node->rightPtr, level + 1);
+
+    for (int i = 0; i < level; ++i) {
+        std::cout << "\t";
+    }
+    std::cout << node->nodeData.key << std::endl;
+
+    Print(node->leftPtr, level + 1);
+
 }

@@ -17,9 +17,9 @@ public:
     TNode* Delete( char* key, TNode* &node );
 
     /*void Save( FILE* file );
-    void Save( FILE* file, TNode* node );
+    void Save( FILE* file, TNode* node );*/
     void Print();
-    void Print( TNode* node, const int level );*/
+    void Print( TNode* node, const int level );
     void Search( char* key);
     void Search( char* key, TNode* node);
 private:
