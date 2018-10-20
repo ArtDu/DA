@@ -1,7 +1,3 @@
-//
-// Created by art on 18.10.18.
-//
-
 #ifndef LAB_2_TNODE_H
 #define LAB_2_TNODE_H
 
@@ -17,6 +13,16 @@ typedef struct TTmpData {
 
         val = 0;
         height = 0;
+    }
+    TTmpData( char* &key, unsigned long long &val, int &height ) {
+        this->val = val;
+        this->height = height;
+        strcpy(this->key, key);
+    }
+    TTmpData( const TTmpData &data ) {
+        val = data.val;
+        strcpy(key,data.key);
+        height = data.height;
     }
     TTmpData& operator= ( TTmpData& right ) {
         val = right.val;
@@ -34,15 +40,20 @@ class TNode {
     friend int Height( TNode* node );
     friend TNode* RotateRight( TNode* node );
     friend TNode* RotateLeft( TNode* node );
-    friend TNode* RemoveMin( TNode* node );
+
     friend TNode* Balance( TNode* node );
 
 public:
     TNode();
     TNode( const TData& data );
+    TNode( char* &key, unsigned long long &val, int &&height );
+    TNode( char* &key, unsigned long long &val, int  &height );
     TNode& operator= (TNode& right);
     TNode* FindMin();
-    ~TNode();
+    TNode* FindMin( TNode* node );
+    TNode* RemoveMin();
+    TNode* RemoveMin( TNode* node );
+    ~TNode() {}
     int BFactor();
     void FixHeight();
 

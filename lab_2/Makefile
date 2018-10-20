@@ -16,6 +16,3 @@ TTree.o: TTree.cpp TTree.h TNode.h
 TNode.o: TNode.cpp TNode.h
 	$(CC) $(FLAGS) -c TNode.cpp
 
-
-clean:
-	rm -f $(SOURCES)
