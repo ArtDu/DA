@@ -9,6 +9,7 @@ TTree::~TTree() {
 
 void TTree::DeleteTree() {
     DeleteTree(root);
+    root = nullptr;
 }
 
 void TTree::DeleteTree(TNode* &node) {
@@ -128,4 +129,49 @@ void TTree::Print(TNode *node, const int level) {
 
     Print(node->leftPtr, level + 1);
 
+}
+
+void TTree::Save(FILE *file) {
+    Save( file, root );
+}
+
+void TTree::Save(FILE *file, TNode *node) {
+    if ( node == nullptr ) {
+        return;
+    }
+
+    fwrite(&(node->nodeData) , sizeof(TData), 1, file);
+
+    Save( file, node->leftPtr );
+    Save( file, node->rightPtr );
+
+}
+
+void TTree::Load(FILE *file) {
+    TData tmp;
+    while ( fread( &tmp, sizeof(TData), 1, file ) == 1 ) {
+
+        root = Load( tmp.key, tmp.val, root );
+    }
+}
+
+TNode* TTree::Load( char* key, unsigned long long &val, TNode* node ) {
+    if( node == nullptr ) {
+
+        TNode* tmp = new TNode( key, val, 1 );
+        return tmp;
+    }
+
+    if( strcmp(key, node->nodeData.key) == 0 ) {
+        return node;
+    }
+
+    if( strcmp(key, node->nodeData.key) < 0 ) {
+        node->leftPtr = Load( key, val, node->leftPtr );
+    }
+    else {
+        node->rightPtr = Load( key, val, node->rightPtr );
+    }
+
+    return Balance(node);
 }
