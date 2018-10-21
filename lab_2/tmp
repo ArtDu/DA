@@ -1,4 +1,10 @@
-NoSuchWord
-NoSuchWord
-NoSuchWord
-NoSuchWord
++ a 23
++ b 123
+! Load dict
++   a 23
+! Save dict
+! Load dict
++ b 34324
+! Save dict_2
+! Load dict
+! Load dict_2

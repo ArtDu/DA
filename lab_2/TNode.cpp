@@ -5,10 +5,10 @@ TNode::TNode() : leftPtr(nullptr), rightPtr(nullptr) {}
 
 TNode::TNode(const TData &data) : nodeData(data) {}
 
-TNode::TNode( char* &key, unsigned long long &val, int &&height )
+TNode::TNode( char* key, unsigned long long &val, int &&height )
     : leftPtr(nullptr), rightPtr(nullptr), nodeData(key, val, height) {}
 
-TNode::TNode( char* &key, unsigned long long &val, int  &height )
+TNode::TNode( char* key, unsigned long long &val, int  &height )
         : leftPtr(nullptr), rightPtr(nullptr), nodeData(key, val, height) {}
 
 TNode& TNode::operator=(TNode &right) {

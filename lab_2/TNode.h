@@ -46,8 +46,8 @@ class TNode {
 public:
     TNode();
     TNode( const TData& data );
-    TNode( char* &key, unsigned long long &val, int &&height );
-    TNode( char* &key, unsigned long long &val, int  &height );
+    TNode( char* key, unsigned long long &val, int &&height );
+    TNode( char* key, unsigned long long &val, int  &height );
     TNode& operator= (TNode& right);
     TNode* FindMin();
     TNode* FindMin( TNode* node );

@@ -16,11 +16,11 @@ public:
     void Delete( char* key );
     TNode* Delete( char* key, TNode* &node );
 
-    TTree& operator=(TTree& right);
-    void Save( FILE* file );
-    void Save( FILE* file, TNode* node );
-    bool Load( FILE* file );
-    TNode* Load( char* key, unsigned long long &val, TNode* node );
+
+    void Save( const char* fileName );
+    void Save( FILE* file, TNode* &node );
+    void Load( const char* fileName );
+    bool Load( FILE *file, TNode* &node );
     void Print();
     void Print( TNode* node, const int level );
     void Search( char* key);
