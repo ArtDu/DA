@@ -14,7 +14,8 @@ int main()
     char mod[8];
     unsigned long long val;
     char action[257];
-    while( std::cin >> action ) {
+    while( std::cin >> action )
+    {
         if (!std::cin) {
             std::cout << "ERROR: input option can not be read " << std::endl;
             std::cin.clear();
