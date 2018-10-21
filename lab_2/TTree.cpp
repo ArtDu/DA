@@ -27,44 +27,47 @@ void TTree::DeleteTree(TNode* &node) {
     delete node;
 }
 
-void TTree::Insert( char* key, unsigned long long &val ) {
-    root = Insert( key, val, root );
+void TTree::Insert( char* &key, unsigned long long &val ) {
+    Insert( key, val, root );
 }
 
-TNode* TTree::Insert( char* key, unsigned long long &val, TNode* &node ) {
+void TTree::Insert( char* &key, unsigned long long &val, TNode* &node ) {
     if( node == nullptr ) {
         
         try {
-            TNode* tmp = new TNode( key, val, 1 );
+            node = new TNode( key, val, 1 );
             std::cout << "OK" << std::endl;
-            return tmp; 
-        } catch (const std::bad_alloc &) {
+            return;
+        } catch ( const std::bad_alloc & ) {
             std::cout << "ERROR: not enough memory" << std::endl;
-            return nullptr;
+            node =  nullptr;
+            return;
         }
     }
 
     if( strcmp(key, node->nodeData.key) == 0 ) {
         std::cout << "Exist" << std::endl;
-        return node;
+        delete key;
+        key = nullptr;
+        return;
     }
 
     if( strcmp(key, node->nodeData.key) < 0 ) {
-        node->leftPtr = Insert( key, val, node->leftPtr );
+        Insert( key, val, node->leftPtr );
     }
     else {
-        node->rightPtr = Insert( key, val, node->rightPtr );
+        Insert( key, val, node->rightPtr );
     }
 
-    return Balance(node);
+    node = Balance(node);
 
 }
 
-void TTree::Delete( char *key ) {
+void TTree::Delete( char key[] ) {
     root = Delete(key, root);
 }
 
-TNode* TTree::Delete( char *key, TNode *&node ) {
+TNode* TTree::Delete( char key[], TNode* &node ) {
     if( node == nullptr ) {
         std::cout << "NoSuchWord" << std::endl;
         return node;
@@ -74,12 +77,13 @@ TNode* TTree::Delete( char *key, TNode *&node ) {
         std::cout << "OK" << std::endl;
         TNode* l = node->leftPtr;
         TNode* r = node->rightPtr;
+        delete node->nodeData.key;
         delete node;
         if( r == nullptr ) {
             return l;
         }
-        TNode* min = r->FindMin();
-        min->rightPtr = r->RemoveMin();
+        TNode* min = r->FindMin(); //return min node-tree
+        min->rightPtr = r->RemoveMin(); //return r tree without min node
         min->leftPtr = l;
         return Balance(min);
     }

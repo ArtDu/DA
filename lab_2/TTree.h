@@ -11,10 +11,10 @@ public:
     ~TTree();
     void DeleteTree();
     void DeleteTree( TNode* &node );
-    void Insert( char* key, unsigned long long &val );
-    TNode* Insert( char* key, unsigned long long &val, TNode* &node );
-    void Delete( char* key );
-    TNode* Delete( char* key, TNode* &node );
+    void Insert( char* &key, unsigned long long &val );
+    void Insert( char* &key, unsigned long long &val, TNode* &node );
+    void Delete( char key[] );
+    TNode* Delete( char key[], TNode* &node );
 
 
     void Save( const char* fileName );

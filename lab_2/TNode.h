@@ -6,27 +6,27 @@
 class TTree;
 
 typedef struct TTmpData {
-    char key[257];
+    char* key;
     unsigned long long val;
     int height;
     TTmpData() {
-
+        key = nullptr;
         val = 0;
         height = 0;
     }
     TTmpData( char* &key, unsigned long long &val, int &height ) {
         this->val = val;
         this->height = height;
-        strcpy(this->key, key);
+        this->key = key;
     }
     TTmpData( const TTmpData &data ) {
         val = data.val;
-        strcpy(key,data.key);
+        key = data.key;
         height = data.height;
     }
     TTmpData& operator= ( TTmpData& right ) {
         val = right.val;
-        strcpy(key,right.key);
+        key = right.key;
         height = right.height;
         return right;
     }
@@ -46,8 +46,8 @@ class TNode {
 public:
     TNode();
     TNode( const TData& data );
-    TNode( char* key, unsigned long long &val, int &&height );
-    TNode( char* key, unsigned long long &val, int  &height );
+    TNode( char* &key, unsigned long long &val, int &&height );
+    TNode( char* &key, unsigned long long &val, int  &height );
     TNode& operator= (TNode& right);
     TNode* FindMin();
     TNode* FindMin( TNode* node );

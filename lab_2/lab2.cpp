@@ -7,7 +7,8 @@ int main()
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(NULL);
     TTree* tree = new TTree();
-    char key[257];
+    char* key;
+    char keyForSearch[257];
     char fileName[257];
     char mod[8];
     unsigned long long val;
@@ -23,6 +24,7 @@ int main()
 
         switch (action[0]) {
             case '+':
+                key = new char[257];
                 std::cin >> key >> val;
                 for(int i = 0; key[i]; i++){
                     key[i] = tolower(key[i]);
@@ -30,11 +32,11 @@ int main()
                 tree->Insert(key, val);
                 break;
             case '-':
-                std::cin >> key;
-                for(int i = 0; key[i]; i++){
-                    key[i] = tolower(key[i]);
+                std::cin >> keyForSearch;
+                for(int i = 0; keyForSearch[i]; i++){
+                    keyForSearch[i] = tolower(keyForSearch[i]);
                 }
-                tree->Delete(key);
+                tree->Delete(keyForSearch);
                 break;
             case '!':
                 std::cin >> mod;
@@ -52,11 +54,11 @@ int main()
                 tree->Print();
                 break;
             default:
-                strcpy(key, action);
-                for(int i = 0; key[i]; i++){
-                    key[i] = tolower(key[i]);
+                strcpy(keyForSearch, action);
+                for(int i = 0; keyForSearch[i]; i++){
+                    keyForSearch[i] = tolower(keyForSearch[i]);
                 }
-                tree->Search(key);
+                tree->Search(keyForSearch);
                 break;
         }
     }
