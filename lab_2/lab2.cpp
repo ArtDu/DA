@@ -3,72 +3,139 @@
 #include "TTree.h"
 #include <ctime>
 
+char ToLower(char ch) {
+    return ch >= 'A' && ch <= 'Z' ? ch - 'A' + 'a' : ch;
+}
+
+bool IsLetter(char ch) {
+    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+}
+
+
 int main()
 {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(NULL);
-    TTree* tree = new TTree();
-    char* key;
-    char keyForSearch[257];
-    char fileName[257];
-    char mod[8];
-    unsigned long long val;
-    char action[257];
-    while( std::cin >> action ) {
-        if (!std::cin) {
-            std::cout << "ERROR: input option can not be read " << std::endl;
-            std::cin.clear();
-            std::cin.ignore();
-            continue;
+    TTree tree;
+
+
+    while( true ) {
+        char key[257];
+        char mod;
+        unsigned long long val;
+        char action;
+        size_t idx = 0;
+
+        do{
+
+            action = getchar();
+        }
+        while( action == '\n' || action == ' ' );
+
+        if (action == EOF) {
+            //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
+            return 0;
         }
 
-        switch (action[0]) {
+        switch (action) {
             case '+':
-                try {
-                    key = new char[257];
-                } catch ( const std::bad_alloc & ) {
-                    std::cout << "ERROR: not enough memory" << std::endl;
-                    continue;
+                /*clock_t start, end;
+                double cpu_time_used;
+                start = clock();
+                end = clock();
+                cpu_time_used = ((double) ((end - start))) / 1000;
+                std::cout << cpu_time_used << std::endl;*/
+
+                getchar();
+
+                while (true) {
+                    action = ToLower(getchar());
+
+                    if (!IsLetter(action)) {
+                        break;
+                    }
+
+                    key[idx++] = action;
+                }
+                key[idx] = '\0';
+                val = 0;
+                while ((action = getchar()) != '\n') {
+                    val = val * 10 + action - '0';
                 }
 
-                std::cin >> key >> val;
-                for(int i = 0; key[i]; i++){
-                    key[i] = tolower(key[i]);
-                }
-                tree->Insert(key, val);
+                tree.Insert(key, val);
+
                 break;
             case '-':
-                std::cin >> keyForSearch;
-                for(int i = 0; keyForSearch[i]; i++){
-                    keyForSearch[i] = tolower(keyForSearch[i]);
+
+                getchar();
+
+                while (true) {
+                    action = ToLower(getchar());
+
+                    if (!IsLetter(action)) {
+                        break;
+                    }
+
+                    key[idx++] = action;
                 }
-                tree->Delete(keyForSearch);
+                key[idx] = '\0';
+
+                tree.Delete(key);
                 break;
             case '!':
-                std::cin >> mod;
 
-                if( strcmp(mod, "Save") == 0 ) {
-                    std::cin >> fileName;
-                    tree->Save( fileName );
+                getchar();
+
+                key[0] = action;
+
+                while ((action = getchar()) != ' ')
+                {
+                    key[idx++] = action;
                 }
-                else if ( strcmp(mod, "Load") == 0 ) {
-                    std::cin >> fileName;
-                    tree->Load( fileName );
+
+                key[idx] = '\0';
+                mod = key[0];
+
+                idx = 0;
+
+                while ((action = getchar()) != '\n')
+                {
+                    key[idx++] = action;
                 }
+
+                key[idx] = '\0';
+
+                if( mod == 'S') {
+                    tree.Save( key );
+                }
+                else {
+                    tree.Load( key );
+                }
+
                 break;
             case '3':
-                tree->Print();
+                tree.Print();
                 break;
             default:
 
-                for(int i = 0; action[i]; i++){
-                    action[i] = tolower(action[i]);
+                key[0] = ToLower(action);
+                ++idx;
+
+                while (true) {
+                    action = ToLower(getchar());
+
+                    if (!IsLetter(action)) {
+                        break;
+                    }
+
+                    key[idx++] = action;
                 }
-                tree->Search(action);
+
+                key[idx] = '\0';
+                tree.Search(key);
                 break;
         }
     }
-    delete tree;
-    //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
-    return 0;
+
 }

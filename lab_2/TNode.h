@@ -3,65 +3,24 @@
 
 #include <cstring>
 
-class TTree;
+struct TNode {
+    TNode() : leftPtr(nullptr), rightPtr(nullptr) {
 
-typedef struct TTmpData {
-    char* key;
-    unsigned long long val;
-    int height;
-    TTmpData() {
-        key = nullptr;
         val = 0;
         height = 0;
     }
-    TTmpData( char* &key, unsigned long long &val, int &height ) {
+    TNode( char* key, unsigned long long val, int height ) {
         this->val = val;
         this->height = height;
-        this->key = key;
+        strcpy(this->key,key);
+        leftPtr = nullptr;
+        rightPtr = nullptr;
     }
-    TTmpData( const TTmpData &data ) {
-        val = data.val;
-        key = data.key;
-        height = data.height;
-    }
-    TTmpData& operator= ( TTmpData& right ) {
-        val = right.val;
-        key = right.key;
-        height = right.height;
-        return right;
-    }
-} TData;
-
-
-
-class TNode {
-
-    friend class TTree;
-    friend int Height( TNode* node );
-    friend TNode* RotateRight( TNode* node );
-    friend TNode* RotateLeft( TNode* node );
-
-    friend TNode* Balance( TNode* node );
-
-public:
-    TNode();
-    TNode( const TData& data );
-    TNode( char* &key, unsigned long long &val, int &&height );
-    TNode( char* &key, unsigned long long &val, int  &height );
-    TNode& operator= (TNode& right);
-    TNode* FindMin();
-    TNode* FindMin( TNode* node );
-    TNode* RemoveMin();
-    TNode* RemoveMin( TNode* node );
-    ~TNode();
-    int BFactor();
-    void FixHeight();
-
-
-private:
     TNode* leftPtr;
     TNode* rightPtr;
-    TData nodeData;
+    char key[257];
+    unsigned long long val;
+    int height;
 };
 
 

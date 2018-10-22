@@ -1,4 +1,4 @@
-source="lab2.cpp TNode.cpp TTree.cpp"
+source="lab2.cpp TTree.cpp"
 bin="main"
 
 if ! g++ -std=c++11 -g -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm ${source} -o ${bin}; then
