@@ -18,9 +18,9 @@ public:
 
 
     void Save( const char* fileName );
-    void Save( FILE* file, TNode* &node );
+    void Save( FILE* &file, TNode* &node );
     void Load( const char* fileName );
-    bool Load( FILE *file, TNode* &node );
+    bool Load( FILE* &file, TNode* &node );
     void Print();
     void Print( TNode* node, const int level );
     void Search( char* key );

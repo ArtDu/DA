@@ -150,7 +150,7 @@ void TTree::Print(TNode *node, const int level) {
 
 void TTree::Save( const char* fileName ) {
     FILE *fp;
-    fp = fopen(fileName, "w");
+    fp = fopen(fileName, "wb");
     if ( fp == NULL ) {
         std::cout << "ERROR: Couldn't create file" << std::endl;
     }
@@ -162,14 +162,23 @@ void TTree::Save( const char* fileName ) {
 
 }
 
-void TTree::Save( FILE *file, TNode* &node ) {
+void TTree::Save( FILE* &file, TNode* &node ) {
+
     if ( node == nullptr ) {
         fwrite(&END, sizeof(char), 1, file);
         return;
     }
 
     fwrite(&NODE, sizeof(char), 1, file);
-    fwrite(&(node->nodeData) , sizeof(TData), 1, file);
+
+
+    size_t length = strlen(node->nodeData.key);
+
+    fwrite(&length, sizeof(length), 1, file);
+    fwrite(node->nodeData.key, sizeof(char), length, file);
+    fwrite(&node->nodeData.val, sizeof(node->nodeData.val), 1, file);
+    fwrite(&node->nodeData.height, sizeof(node->nodeData.height), 1, file);
+
 
     Save( file, node->leftPtr );
     Save( file, node->rightPtr );
@@ -179,7 +188,7 @@ void TTree::Save( FILE *file, TNode* &node ) {
 
 void TTree::Load( const char* fileName ) {
     FILE *fp;
-    fp = fopen( fileName, "r" );
+    fp = fopen( fileName, "rb" );
     if ( fp == nullptr ) {
         std::cout << "ERROR: Couldn't open file" << std::endl;
         return;
@@ -203,15 +212,25 @@ void TTree::Load( const char* fileName ) {
     fclose (fp);
 }
 
-bool TTree::Load( FILE *file, TNode* &node ) {
+bool TTree::Load( FILE* &file, TNode* &node ) {
+
 
     TData tmpData;
+    size_t length;
     char mark;
     fread(&mark, sizeof(char), 1, file);
 
     if( mark == NODE ) {
 
-        fread( &tmpData, sizeof(tmpData), 1, file );
+
+        fread(&length, sizeof(length), 1, file);
+        tmpData.key = (char *)malloc(sizeof(char) * (length + 1));
+        fread(tmpData.key, sizeof(char), length, file);
+        tmpData.key[length] = '\0';
+        fread(&tmpData.val, sizeof(tmpData.val), 1, file);
+        fread(&tmpData.height, sizeof(tmpData.height), 1, file);
+
+
         try {
             node = new TNode( tmpData.key, tmpData.val, tmpData.height );
 
