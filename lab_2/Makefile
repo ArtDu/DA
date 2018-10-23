@@ -4,14 +4,15 @@ SOURCES = lab2.cpp TTree.cpp
 EXECUTABLE = lab2
 all: build
 
-build: lab2.cpp TTree.cpp 
+build: lab2.cpp TTree.cpp
 	$(CC) $(FLAGS) -o $(EXECUTABLE) $(SOURCES)
 
-lab2.o: lab2.cpp TTree.h TNode.h
+lab2.o: lab2.cpp TTree.h
 	$(CC) $(FLAGS) -c lab2.cpp
 
-TTree.o: TTree.cpp TTree.h TNode.h
+TTree.o: TTree.cpp TTree.h
 	$(CC) $(FLAGS) -c TTree.cpp
+
 
 clean:
 	rm -f *.o

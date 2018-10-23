@@ -1,43 +1,56 @@
 
 #ifndef LAB_2_TTREE_H
 #define LAB_2_TTREE_H
-#include <iostream>
-#include <cstddef>
-#include "TNode.h"
+
+#include <stdint.h>
+#include <cstring>
+#include <cstdio>
+
+struct TData {
+    char *key;
+    unsigned long long value;
+};
+
+struct TNode {
+    uint8_t height;
+    TData *data;
+    TNode *left;
+    TNode *right;
+};
 
 class TTree {
-    int Height( TNode* node );
-    TNode* RotateRight( TNode* node );
-    TNode* RotateLeft( TNode* node );
-    TNode* Balance( TNode* node );
 public:
+
     TTree();
+    void Insert(TData data);
+    void Delete(TData data);
+    bool Search(TData &data);
+    bool Serialize(const char* filename);
+    bool Deserialize(const char* filename);
+    void Erase();
+    void PrintTree(TNode *node);
+
     ~TTree();
-    void DeleteTree();
-    void DeleteTree( TNode* &node );
-    void Insert( char key[], unsigned long long &val );
-    bool Insert( char key[], unsigned long long &val, TNode* &node );
-    void Delete( char key[] );
-    TNode* Delete( char key[], TNode* &node );
 
-
-    TNode* FindMin();
-    TNode* FindMin( TNode* node );
-    TNode* RemoveMin();
-    TNode* RemoveMin( TNode* node );
-    int BFactor( TNode* node );
-    void FixHeight( TNode* &node );
-
-    void Save( const char* fileName );
-    void Save( FILE* &file, TNode* &node );
-    void Load( const char* fileName );
-    bool Load( FILE* &file, TNode* &node );
-    void Print();
-    void Print( TNode* node, const int level );
-    void Search( char* key );
-    void Search( char* key, TNode* node );
 private:
-    TNode* root;
+
+    TNode *root;
+    TNode *CreateNode(TData data);
+    void DeleteNode(TNode *&node);
+    TNode *InsertSub(TNode *node, TData data);
+    TNode *Balance(TNode *node);
+    TNode *RotateLeft(TNode *q);
+    TNode *RotateRight(TNode *q);
+    void SetHeight(TNode *node);
+    TNode *Min(TNode *node);
+    TNode *DeleteSub(TNode *node, TData data);
+    TNode *DelMin(TNode *node);
+    int BalFact(TNode *node);
+    int GetHeight(TNode *node);
+    bool SearchSub(TNode *&node, TData &data);
+    bool SerializeSub(FILE *f, TNode *node);
+    bool DeserializeSub(FILE *f, TNode *&node);
+
 };
 
 

@@ -1,343 +1,386 @@
 
 #include "TTree.h"
-#include <ctime>
-#include <cstring>
+
+#include <iostream>
+
 
 char NODE = 'y';
 char END = 'n';
 
+const size_t LEN_KEY = 256;  // Max length of key-string
 
-
-int TTree::Height(TNode* node) {
-    return node ? node->height : 0;
+TTree::TTree() {
+    root = nullptr;
 }
 
-int TTree::BFactor( TNode* node ) {
-    return Height( node->rightPtr ) - Height( node->leftPtr );
+TNode * TTree::CreateNode(TData data) {
+    TNode *node = (TNode *)malloc(sizeof(TNode));
+    node->data = (TData *)malloc(sizeof(TData));
+    node->data->key = (char *)malloc(sizeof(char) * (strlen(data.key) + 1));
+    strcpy(node->data->key, data.key);
+    node->data->value = data.value;
+    node->height = 1;
+    node->left = nullptr;
+    node->right = nullptr;
+    return node;
 }
 
-void TTree::FixHeight( TNode* &node ) {
-    int hl = Height( node->leftPtr );
-    int hr = Height( node->rightPtr );
-    node->height = ( hl > hr ? hl : hr ) + 1;
-}
-
-TNode* TTree::RotateRight( TNode* node ) {
-    TNode* l = node->leftPtr;
-    node->leftPtr = l->rightPtr;
-    l->rightPtr = node;
-    FixHeight( node );
-    FixHeight( l );
-    return l;
-}
-
-TNode* TTree::RotateLeft( TNode* node ) {
-    TNode* r = node->rightPtr;
-    node->rightPtr = r->leftPtr;
-    r->leftPtr = node;
-    FixHeight( node );
-    FixHeight( r );
-    return r;
-}
-
-TNode* TTree::Balance( TNode* node ) {
-    FixHeight( node );
-    if( BFactor( node ) == 2 )
-    {
-        if( BFactor( node->rightPtr ) < 0 )
-            node->rightPtr = RotateRight(node->rightPtr);
-        return RotateLeft(node);
+int TTree::GetHeight(TNode *node) {
+    if (node == nullptr) {
+        return 0;
+    } else {
+        return node->height;
     }
-    if( BFactor( node ) == -2 )
-    {
-        if( BFactor( node->leftPtr ) > 0  )
-            node->leftPtr = RotateLeft(node->leftPtr);
-        return RotateRight(node);
+}
+
+int TTree::BalFact(TNode* node) {
+    return GetHeight(node->right)-GetHeight(node->left);
+}
+
+void TTree::SetHeight(TNode *node) {
+    uint8_t hl = GetHeight(node->left);
+    uint8_t hr = GetHeight(node->right);
+    if (hl > hr) {
+        node->height = hl + 1;
+    } else {
+        node->height = hr + 1;
+    }
+}
+
+TNode *TTree::Balance(TNode *node) {
+
+    SetHeight(node);
+    if (BalFact(node) == 2) {
+        if (BalFact(node->right) < 0) {
+            node->right = RotateRight(node->right);
+        }
+        node = RotateLeft(node);
+    } else if (BalFact(node) == -2) {
+        if (BalFact(node->left) > 0) {
+            node->left = RotateLeft(node->left);
+        }
+        node = RotateRight(node);
     }
     return node;
 }
 
-
-TNode* TTree::FindMin( TNode* node ) {
-    return node->leftPtr ? FindMin(node->leftPtr) : node;
+TNode *TTree::RotateLeft(TNode *q) {
+    TNode* p = q->right;
+    q->right = p->left;
+    p->left = q;
+    SetHeight(q);
+    SetHeight(p);
+    return p;
 }
 
-TNode* TTree::RemoveMin( TNode* node ) {
-    if( node->leftPtr == nullptr )
-        return node->rightPtr;
-    node->leftPtr = RemoveMin(node->leftPtr);
-    return Balance(node);
+TNode *TTree::RotateRight(TNode *p) {
+    TNode* q = p->left;
+    p->left = q->right;
+    q->right = p;
+    SetHeight(p);
+    SetHeight(q);
+    return q;
 }
 
-
-
-
-TTree::TTree() : root(nullptr) {}
-
-TTree::~TTree() {
-    DeleteTree(root);
-}
-
-void TTree::DeleteTree() {
-    DeleteTree(root);
-    root = nullptr;
-}
-
-void TTree::DeleteTree(TNode* &node) {
-    if( node == nullptr ) {
-        return;
+TNode *TTree::Min(TNode *node) {
+    while (node->left != nullptr) {
+        node = node->left;
     }
-
-    DeleteTree( node->leftPtr );
-    DeleteTree( node->rightPtr );
-
-    delete node;
+    return node;
 }
 
-void TTree::Insert( char key[], unsigned long long &val ) {
-     
+TNode *TTree::InsertSub(TNode *node, TData data) {
 
-    Insert( key, val, root );
-
-      
-
-}
-
-bool TTree::Insert( char key[], unsigned long long &val, TNode* &node ) {
-
-    if( node == nullptr ) {
+    if(node == nullptr) {
+       
+        node = CreateNode(data);
         
-
-        node = (TNode *)malloc(sizeof(TNode));
-
-        node->leftPtr = nullptr;
-        node->rightPtr = nullptr;
-        node->val = val;
-        node->height = 1;
-        strcpy(node->key, key);
-
-
-        std::cout << "OK" << std::endl;
-
-        return true;
-
-        
-
-    }
-
-    if( strcmp(key, node->key) == 0 ) {
-        std::cout << "Exist" << std::endl;
-        key = nullptr;
-        return false;
-    }
-
-    bool flaq = false;
-
-    if( strcmp(key, node->key) < 0 ) {
-        flaq = Insert( key, val, node->leftPtr );
-    }
-    else {
-        flaq = Insert( key, val, node->rightPtr );
-    }
-
-    if ( flaq ) {
+    } else {
+        int cmpRes = strcmp(node->data->key, data.key);
+        if (cmpRes == 0) {
+        } else if (cmpRes > 0) {
+            node->left = InsertSub(node->left, data);
+        } else {
+            node->right = InsertSub(node->right, data);
+        }
         node = Balance(node);
     }
-    return flaq;
+    return node;
 }
 
-void TTree::Delete( char key[] ) {
-    root = Delete(key, root);
-}
+void TTree::Insert(TData data) {
 
-TNode* TTree::Delete( char key[], TNode* &node ) {
-    if( node == nullptr ) {
-        std::cout << "NoSuchWord" << std::endl;
-        return node;
-    }
-
-    if( strcmp(key, node->key) == 0 ) {
-        std::cout << "OK" << std::endl;
-        TNode* l = node->leftPtr;
-        TNode* r = node->rightPtr;
-        delete node;
-        if( r == nullptr ) {
-            return l;
+    if(root == nullptr) {
+        
+        root = CreateNode(data);
+        
+    } else {
+        int cmpRes = strcmp(root->data->key, data.key);
+        if (cmpRes == 0) {
+        } else if (cmpRes > 0 ) {
+            root->left = InsertSub(root->left, data);
+        } else {
+            root->right = InsertSub(root->right, data);
         }
-        TNode* min = FindMin( r ); //return min node-tree
-        min->rightPtr = RemoveMin( r ); //return r tree without min node
-        min->leftPtr = l;
-        return Balance(min);
+        root = Balance(root);
     }
+}
 
-    if( strcmp(key, node->key) < 0 ) {
-        node->leftPtr = Delete( key, node->leftPtr );
-    }
-    else {
-        node->rightPtr = Delete( key, node->rightPtr );
-    }
+TNode *TTree::DelMin(TNode *node) {
+    if( node->left == nullptr )
+        return node->right;
+    node->left = DelMin(node->left);
+    return Balance(node);
+}
 
+TNode *TTree::DeleteSub(TNode *node, TData data) {
+    if (node == nullptr) {
+    } else {
+        int cmpRes = strcmp(node->data->key, data.key);
+        if (cmpRes > 0) {
+            node->left = DeleteSub(node->left, data);
+        } else if (cmpRes < 0) {
+            node->right = DeleteSub(node->right, data);
+        } else {
+            TNode *l = node->left;
+            TNode *r = node->right;
+            free(node->data->key);
+            free(node->data);
+            free(node);
+            node = nullptr;
+            if (r == nullptr) {
+                return l;
+            }
+            TNode *min = Min(r);
+            min->right = DelMin(r);
+            min->left = l;
+            return Balance(min);
+        }
+
+    }
     return Balance(node);
 
-
 }
 
-
-void TTree::Search(char *key) {
-    Search( key, root);
-}
-
-void TTree::Search(char *key, TNode *node) {
-    if( node == nullptr ) {
-        std::cout << "NoSuchWord" << std::endl;
-        return;
-    }
-
-    if( strcmp(key, node->key) == 0 ) {
-        std::cout << "OK: " << node->val <<  std::endl;
-        return;
-    }
-
-    if( strcmp(key, node->key) < 0 ) {
-        Search( key, node->leftPtr );
-    }
-    else {
-        Search( key, node->rightPtr );
-    }
-}
-
-void TTree::Print() {
-    Print(root, 0);
-}
-
-void TTree::Print(TNode *node, const int level) {
-
-    if ( node == nullptr ) {
-        return;
-    }
-
-    Print(node->rightPtr, level + 1);
-
-    for (int i = 0; i < level; ++i) {
-        std::cout << "\t";
-    }
-    std::cout << node->key << std::endl;
-
-    Print(node->leftPtr, level + 1);
-
-}
-
-void TTree::Save( const char* fileName ) {
-    FILE *fp;
-    fp = fopen(fileName, "wb");
-    if ( fp == nullptr ) {
-        std::cout << "ERROR: Couldn't create file" << std::endl;
-    }
-    else {
-        Save( fp, root );
-        std::cout << "OK" << std::endl;
-        fclose (fp);
+void TTree::Delete(TData data) {
+    if (root == nullptr) {
+    } else {
+        int cmpRes = strcmp(root->data->key, data.key);
+        if (cmpRes > 0) {
+            root->left = DeleteSub(root->left, data);
+        } else if (cmpRes < 0) {
+            root->right = DeleteSub(root->right, data);
+        } else {
+            TNode *l = root->left;
+            TNode *r = root->right;
+            free(root->data->key);
+            free(root->data);
+            free(root);
+            root = nullptr;
+            if (r == nullptr) {
+                root = l;
+                return;
+            }
+            TNode *min = Min(r);
+            min->right = DelMin(r);
+            min->left = l;
+            root = Balance(min);
+        }
+        root = Balance(root);
     }
 
 }
 
-void TTree::Save( FILE* &file, TNode* &node ) {
-
-    if ( node == nullptr ) {
-        fwrite(&END, sizeof(char), 1, file);
-        return;
-    }
-
-    fwrite(&NODE, sizeof(char), 1, file);
-
-
-    size_t length = strlen(node->key);
-
-    fwrite(&length, sizeof(length), 1, file);
-    fwrite(node->key, sizeof(char), length, file);
-    fwrite(&node->val, sizeof(node->val), 1, file);
-    fwrite(&node->height, sizeof(node->height), 1, file);
-
-
-    Save( file, node->leftPtr );
-    Save( file, node->rightPtr );
-
-}
-
-
-void TTree::Load( const char* fileName ) {
-    FILE *fp;
-    fp = fopen( fileName, "rb" );
-    if ( fp == nullptr ) {
-        std::cout << "ERROR: Couldn't open file" << std::endl;
-        return;
-    }
-
-    if( root ) {
-        DeleteTree( root );
-        root = nullptr;
-    }
-
-
-
-
-    if ( this->Load( fp, root ) ) {
-        //std::cout << "ERROR: Couldn't load file" << std::endl;
-    }
-    else {
-        std::cout << "OK" << std::endl;
-    }
-
-    fclose (fp);
-}
-
-bool TTree::Load( FILE* &file, TNode* &node ) {
-
-
-    char* key;
-    unsigned long long val;
-    int height;
-    size_t length;
-    char mark;
-    fread(&mark, sizeof(char), 1, file);
-
-    if( mark == NODE ) {
-
-
-        fread(&length, sizeof(length), 1, file);
-        key = (char *)malloc(sizeof(char) * (length + 1));
-        fread(key, sizeof(char), length, file);
-        key[length] = '\0';
-        fread(&val, sizeof(val), 1, file);
-        fread(&height, sizeof(height), 1, file);
-
-
-        try {
-            node = (TNode *)malloc(sizeof(TNode));
-            node->leftPtr = nullptr;
-            node->rightPtr = nullptr;
-            node->val = val;
-            node->height = 1;
-            strcpy(node->key, key);
-
-        } catch ( const std::bad_alloc & ) {
-            std::cout << "ERROR: not enough memory" << std::endl;
+bool TTree::SearchSub(TNode *&node, TData &data) {
+    if (node == nullptr) {
+        return false;
+    } else {
+        int cmpRes = strcmp(node->data->key, data.key);
+        if (cmpRes > 0) {
+            if (!SearchSub(node->left, data)) {
+                return false;
+            }
+        } else if (cmpRes < 0) {
+            if (!SearchSub(node->right, data)) {
+                return false;
+            }
+        } else {
+            data.value = node->data->value;
             return true;
         }
-        
+
     }
-    else {
+    return true;
+}
+
+bool TTree::Search(TData &data) {
+    TNode *node = root;
+    if (node == nullptr) {
+        return false;
+    } else {
+        int cmpRes = strcmp(node->data->key, data.key);
+        if (cmpRes > 0) {
+            if (!SearchSub(node->left, data)) {
+                return false;
+            }
+        } else if (cmpRes < 0) {
+            if (!SearchSub(node->right, data)) {
+                return false;
+            }
+        } else {
+            data.value = node->data->value;
+            return true;
+        }
+    }
+    return true;
+}
+
+bool TTree::Serialize(const char* filename) {
+
+
+    FILE *f = fopen(filename, "wb");
+
+    if (f == nullptr) {
         return false;
     }
 
-    if( Load( file, node->leftPtr ) ) {
+    if (root == nullptr) {
+        if (fwrite(&END, sizeof(char), 1, f) != 1) {
+            return false;
+        }
         return true;
     }
 
-    if( Load( file, node->rightPtr ) ) {
+    bool ser = SerializeSub(f, root);
+
+    fclose(f);
+
+    return ser;
+}
+
+bool TTree::SerializeSub(FILE *f, TNode *node) {
+
+    if (node == nullptr) {
+        if (fwrite(&END, sizeof(char), 1, f) != 1) {
+            return false;
+        }
         return true;
     }
 
-    return false;
+    size_t length = strlen(node->data->key);
 
+    fwrite(&NODE, sizeof(char), 1, f);
+
+    fwrite(&length, sizeof(length), 1, f);
+    fwrite(node->data->key, sizeof(char), length, f);
+    fwrite(&node->data->value, sizeof(node->data->value), 1, f);
+    fwrite(&node->height, sizeof(node->height), 1, f);
+
+    if (!SerializeSub(f, node->left)) {
+        return false;
+    }
+
+    if (!SerializeSub(f, node->right)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool TTree::Deserialize(const char* filename) {
+
+    FILE *f = fopen(filename, "rb");
+
+    if (f == nullptr) {
+        fclose(f);
+        return false;
+    }
+
+    if(root) {
+        DeleteNode(root);
+    }
+
+    bool deSer = DeserializeSub(f, root);
+
+    fclose(f);
+
+    return deSer;
+}
+
+bool TTree::DeserializeSub(FILE *f, TNode *&node) {
+
+    char mark;
+    fread(&mark, sizeof(char), 1, f);
+
+    if (mark == NODE) {
+
+        TData data;
+        size_t length;
+        uint8_t height;
+
+        fread(&length, sizeof(length), 1, f);
+        data.key = (char *)malloc(sizeof(char) * (length + 1));
+        fread(data.key, sizeof(char), length, f);
+        data.key[length] = '\0';
+        fread(&data.value, sizeof(data.value), 1, f);
+        fread(&height, sizeof(height), 1, f);
+
+        node = CreateNode(data);
+        node->height = height;
+
+        free(data.key);
+
+    } else {
+        return true;
+    }
+
+    if (!DeserializeSub(f, node->left)) {
+        return false;
+    }
+
+    if (!DeserializeSub(f, node->right)) {
+        return false;
+    }
+
+    return true;
+
+}
+
+void TTree::DeleteNode(TNode *&node) {
+
+    if (node->left) {
+        DeleteNode(node->left);
+    }
+
+    if (node->right) {
+        DeleteNode(node->right);
+    }
+
+    free(node->data->key);
+    free(node->data);
+    free(node);
+    node = nullptr;
+}
+
+void TTree::Erase() {
+    if (root) {
+        DeleteNode(root);
+    }
+}
+
+TTree::~TTree() {
+    Erase();
+}
+
+void TTree::PrintTree(TNode *t)
+{
+    static int l=0;
+    l++;
+    if(t) {
+        PrintTree(t->right);
+        for(int i = 0; i < l; i++)printf("    ");
+        printf("\\__%s\n",t->data->key);
+        PrintTree(t->left);
+    }
+    l--;
 }

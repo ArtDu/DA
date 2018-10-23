@@ -14,12 +14,13 @@ bool IsLetter(char ch) {
 
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL);
+    std::ios_base::sync_with_stdio( false );
+    std::cin.tie( nullptr );
     TTree tree;
 
 
     while( true ) {
+        TData data;
         char key[257];
         char mod;
         unsigned long long val;
@@ -29,8 +30,21 @@ int main()
         do{
 
             action = getchar();
+            if (!std::cin) {
+                std::cout << "ERROR: input option can not be read " << std::endl;
+                std::cin.clear();
+                std::cin.ignore();
+                continue;
+            }
         }
         while( action == '\n' || action == ' ' );
+        if (!std::cin) {
+            std::cout << "ERROR: input option can not be read " << std::endl;
+            std::cin.clear();
+            std::cin.ignore();
+            continue;
+        }
+
 
         if (action == EOF) {
             //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
@@ -63,7 +77,21 @@ int main()
                     val = val * 10 + action - '0';
                 }
 
-                tree.Insert(key, val);
+                data.key = new char[strlen(key) + 1];
+                strcpy(data.key, key);
+                data.value = val;
+
+                if (!tree.Search(data)) {
+
+                    tree.Insert(data);
+                    printf("OK\n");
+
+                }
+                else {
+                    printf("Exist\n");
+                }
+
+                delete[] data.key;
 
                 break;
             case '-':
@@ -81,7 +109,18 @@ int main()
                 }
                 key[idx] = '\0';
 
-                tree.Delete(key);
+                data.key = new char[strlen(key) + 1];
+                strcpy(data.key, key);
+
+                if (!tree.Search(data)) {
+                    printf("NoSuchWord\n");
+                }
+                else {
+                    tree.Delete(data);
+
+                    printf("OK\n");
+                }
+                delete[] data.key;
                 break;
             case '!':
 
@@ -107,15 +146,26 @@ int main()
                 key[idx] = '\0';
 
                 if( mod == 'S') {
-                    tree.Save( key );
+
+                    if (tree.Serialize(key)) {
+                        printf("OK\n");
+                    }
+                    else {
+                        printf("ERROR: Couldn't create file\n");
+                    }
                 }
                 else {
-                    tree.Load( key );
+                    if (tree.Deserialize(key)) {
+                        printf("OK\n");
+                    }
+                    else {
+                        printf("ERROR: Couldn't load file\n");
+                    }
                 }
 
                 break;
             case '3':
-                tree.Print();
+                //tree.Print();
                 break;
             default:
 
@@ -133,7 +183,16 @@ int main()
                 }
 
                 key[idx] = '\0';
-                tree.Search(key);
+
+                data.key = new char[strlen(key) + 1];
+                strcpy(data.key, key);
+                if (!tree.Search(data)) {
+                    printf("NoSuchWord\n");
+                }
+                else {
+                    printf("OK: %llu\n",data.value);
+                }
+                delete[] data.key;
                 break;
         }
     }
