@@ -3,27 +3,57 @@
 #include "TTree.h"
 #include <ctime>
 
-char ToLower(char ch) {
+char ToLower( char ch ) {
     return ch >= 'A' && ch <= 'Z' ? ch - 'A' + 'a' : ch;
 }
 
-bool IsLetter(char ch) {
-    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+bool IsLetter( char ch ) {
+    return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' );
 }
 
+void GetKey( char key[] ) {
+
+    char ch;
+    int idx = 0;
+
+    do {
+        ch = getchar();
+    }
+    while ( ch == ' ' || ch == '\n' );
+
+
+    while (true) {
+        ch = ToLower( getchar() );
+
+        if ( !IsLetter(ch) ) {
+            break;
+        }
+
+        key[idx++] = ch;
+    }
+    key[idx] = '\0';
+}
+
+void GetVal( unsigned long long &val) {
+    char ch;
+    val = 0;
+    while ((ch = getchar()) != '\n') {
+        val = val * 10 + ch - '0';
+    }
+}
 
 int main()
 {
     std::ios_base::sync_with_stdio( false );
     std::cin.tie( nullptr );
-    TTree tree;
 
+    TTree tree;
 
     while( true ) {
         TData data;
         char key[257];
-        char mod;
         unsigned long long val;
+        char mod;
         char action;
         size_t idx = 0;
 
@@ -53,29 +83,12 @@ int main()
 
         switch (action) {
             case '+':
-                /*clock_t start, end;
-                double cpu_time_used;
-                start = clock();
-                end = clock();
-                cpu_time_used = ((double) ((end - start))) / 1000;
-                std::cout << cpu_time_used << std::endl;*/
 
-                getchar();
 
-                while (true) {
-                    action = ToLower(getchar());
 
-                    if (!IsLetter(action)) {
-                        break;
-                    }
+                GetKey( key );
 
-                    key[idx++] = action;
-                }
-                key[idx] = '\0';
-                val = 0;
-                while ((action = getchar()) != '\n') {
-                    val = val * 10 + action - '0';
-                }
+                GetVal( val );
 
                 data.key = new char[strlen(key) + 1];
                 strcpy(data.key, key);
@@ -96,18 +109,7 @@ int main()
                 break;
             case '-':
 
-                getchar();
-
-                while (true) {
-                    action = ToLower(getchar());
-
-                    if (!IsLetter(action)) {
-                        break;
-                    }
-
-                    key[idx++] = action;
-                }
-                key[idx] = '\0';
+                GetKey( key );
 
                 data.key = new char[strlen(key) + 1];
                 strcpy(data.key, key);
@@ -124,26 +126,10 @@ int main()
                 break;
             case '!':
 
-                getchar();
-
-                key[0] = action;
-
-                while ((action = getchar()) != ' ')
-                {
-                    key[idx++] = action;
-                }
-
-                key[idx] = '\0';
+                GetKey(key);
                 mod = key[0];
 
-                idx = 0;
-
-                while ((action = getchar()) != '\n')
-                {
-                    key[idx++] = action;
-                }
-
-                key[idx] = '\0';
+                GetKey( key );
 
                 if( mod == 'S') {
 
