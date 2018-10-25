@@ -18,14 +18,13 @@ void GetKey( char key[] ) {
 
     do {
         ch = getchar();
-    }
-    while ( ch == ' ' || ch == '\n' );
+    } while ( ch == ' ' || ch == '\n' );
 
 
-    while (true) {
-        ch = ToLower( getchar() );
+    while ( true ) {
+        ch = ToLower( getchar());
 
-        if ( !IsLetter(ch) ) {
+        if ( !IsLetter( ch )) {
             break;
         }
 
@@ -34,74 +33,61 @@ void GetKey( char key[] ) {
     key[idx] = '\0';
 }
 
-void GetVal( unsigned long long &val) {
+void GetVal( unsigned long long &val ) {
     char ch;
     val = 0;
-    while ((ch = getchar()) != '\n') {
+    while (( ch = getchar()) != '\n' ) {
         val = val * 10 + ch - '0';
     }
 }
 
-int main()
-{
+int main() {
     std::ios_base::sync_with_stdio( false );
     std::cin.tie( nullptr );
 
     TTree tree;
 
-    while( true ) {
-        TData data;
-        char key[257];
-        unsigned long long val;
-        char mod;
-        char action;
-        size_t idx = 0;
+    while ( true ) {
 
-        do{
+        TData data;
+        char key[257],
+             keyForSearch[257];
+        unsigned long long val;
+        char mod,
+             action;
+
+        do {
 
             action = getchar();
-            if (!std::cin) {
+            if ( !std::cin ) {
                 std::cout << "ERROR: input option can not be read " << std::endl;
                 std::cin.clear();
                 std::cin.ignore();
                 continue;
             }
-        }
-        while( action == '\n' || action == ' ' );
-        if (!std::cin) {
-            std::cout << "ERROR: input option can not be read " << std::endl;
-            std::cin.clear();
-            std::cin.ignore();
-            continue;
-        }
+        } while ( action == '\n' || action == ' ' );
 
 
-        if (action == EOF) {
+        if ( action == EOF) {
             //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
             return 0;
         }
 
-        switch (action) {
+        switch ( action ) {
             case '+':
 
-
-
                 GetKey( key );
-
                 GetVal( val );
 
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
+                data.key = new char[strlen( key ) + 1];
+                strcpy( data.key, key );
                 data.value = val;
 
-                if (!tree.Search(data)) {
-
-                    tree.Insert(data);
-                    printf("OK\n");
-
-                }
-                else {
-                    printf("Exist\n");
+                if ( !tree.Search( data )) {
+                    tree.Insert( data );
+                    printf( "OK\n" );
+                } else {
+                    printf( "Exist\n" );
                 }
 
                 delete[] data.key;
@@ -111,72 +97,56 @@ int main()
 
                 GetKey( key );
 
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
+                data.key = new char[strlen( key ) + 1];
+                strcpy( data.key, key );
 
-                if (!tree.Search(data)) {
-                    printf("NoSuchWord\n");
-                }
-                else {
-                    tree.Delete(data);
-
-                    printf("OK\n");
+                if ( !tree.Search( data )) {
+                    printf( "NoSuchWord\n" );
+                } else {
+                    tree.Delete( data );
+                    printf( "OK\n" );
                 }
                 delete[] data.key;
                 break;
             case '!':
 
-                GetKey(key);
+                GetKey( key );
                 mod = key[0];
 
                 GetKey( key );
 
-                if( mod == 'S') {
+                if ( mod == 'S' ) {
 
-                    if (tree.Serialize(key)) {
-                        printf("OK\n");
+                    if ( tree.Serialize( key )) {
+                        printf( "OK\n" );
+                    } else {
+                        printf( "ERROR: Couldn't create file\n" );
                     }
-                    else {
-                        printf("ERROR: Couldn't create file\n");
-                    }
-                }
-                else {
-                    if (tree.Deserialize(key)) {
-                        printf("OK\n");
-                    }
-                    else {
-                        printf("ERROR: Couldn't load file\n");
+                } else {
+                    if ( tree.Deserialize( key )) {
+                        printf( "OK\n" );
+                    } else {
+                        printf( "ERROR: Couldn't load file\n" );
                     }
                 }
 
                 break;
-            case '3':
-                //tree.Print();
-                break;
+
             default:
 
-                key[0] = ToLower(action);
-                ++idx;
+                keyForSearch[0] = ToLower( action );
+                keyForSearch[1] = '\0';
 
-                while (true) {
-                    action = ToLower(getchar());
+                GetKey( key );
+                strcat( keyForSearch, key );
 
-                    if (!IsLetter(action)) {
-                        break;
-                    }
+                data.key = new char[strlen( key ) + 1];
+                strcpy( data.key, keyForSearch );
 
-                    key[idx++] = action;
-                }
-
-                key[idx] = '\0';
-
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
-                if (!tree.Search(data)) {
-                    printf("NoSuchWord\n");
-                }
-                else {
-                    printf("OK: %llu\n",data.value);
+                if ( !tree.Search( data )) {
+                    printf( "NoSuchWord\n" );
+                } else {
+                    printf( "OK: %llu\n", data.value );
                 }
                 delete[] data.key;
                 break;
