@@ -15,11 +15,12 @@ void GetKey( char key[] ) {
 
     char ch;
     int idx = 0;
-
     do {
         ch = getchar();
     } while ( ch == ' ' || ch == '\n' );
 
+
+    key[idx++] = ToLower( ch );
 
     while ( true ) {
         ch = ToLower( getchar());
@@ -50,11 +51,12 @@ int main() {
     while ( true ) {
 
         TData data;
-        char key[257],
-             keyForSearch[257];
+        char key[257];
+        char keyForSearch[257];
         unsigned long long val;
         char mod,
              action;
+        //size_t idx = 0;
 
         do {
 
@@ -134,19 +136,19 @@ int main() {
 
             default:
 
-                keyForSearch[0] = ToLower( action );
+                keyForSearch[0] = ToLower(action);
                 keyForSearch[1] = '\0';
 
                 GetKey( key );
                 strcat( keyForSearch, key );
+                data.key = new char[strlen(keyForSearch) + 1];
+                strcpy(data.key, keyForSearch);
 
-                data.key = new char[strlen( key ) + 1];
-                strcpy( data.key, keyForSearch );
-
-                if ( !tree.Search( data )) {
-                    printf( "NoSuchWord\n" );
-                } else {
-                    printf( "OK: %llu\n", data.value );
+                if (!tree.Search(data)) {
+                    printf("NoSuchWord\n");
+                }
+                else {
+                    printf("OK: %llu\n",data.value);
                 }
                 delete[] data.key;
                 break;
