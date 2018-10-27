@@ -1,10 +1,10 @@
-source="lab2.cpp TTree.cpp"
-bin="main"
+source=main.cpp
+bin=${source%.*}
 
-if ! g++ -std=c++11 -g -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm ${source} -o ${bin}; then
-    echo "ERROR: Failed to compile file."
-    exit 1
-fi
+#if ! g++ -std=c++11 ${source} -o ${bin}; then
+#    echo "ERROR: Failed to compile file."
+#    exit 1
+#fi
 
 mkdir -p tests
 if ! python3 test_generator.py 10 ; then
@@ -13,16 +13,16 @@ if ! python3 test_generator.py 10 ; then
 fi
 
 for test_file in `ls tests/*.t`; do
-    echo "Execute ./${bin} <  ${test_file} > tmp"
-    if ! ./${bin} < $test_file > tmp ; then
+    answer_file="${test_file%.*}"
+    echo "Execute ${test_file}"
+    if !  ./main < $test_file > "${answer_file}.pl" ; then
         echo "ERROR"
         continue
     fi
-    answer_file="${test_file%.*}"
 
-    if ! diff  "${answer_file}.a" tmp ; then
+    if ! diff -u "${answer_file}.txt"  "${answer_file}.pl" > /dev/null ; then
         echo "Failed"
     else
         echo "OK"
     fi 
-done
+done  

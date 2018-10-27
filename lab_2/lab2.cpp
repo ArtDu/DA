@@ -27,8 +27,8 @@ int main() {
         char key[257];
         char keyForSearch[257];
         unsigned long long val;
-        char mod,
-             action;
+        char mod, action;
+        int idx;
 
         do {
 
@@ -50,6 +50,8 @@ int main() {
         switch ( action ) {
             case '+':
 
+                getchar();
+
                 GetKey( key );
                 GetVal( val );
 
@@ -69,6 +71,8 @@ int main() {
                 break;
             case '-':
 
+                getchar();
+
                 GetKey( key );
 
                 data.key = new char[strlen( key ) + 1];
@@ -84,10 +88,19 @@ int main() {
                 break;
             case '!':
 
+                getchar();
+
                 GetKey( key );
                 mod = key[0];
 
-                GetKey( key );
+                idx = 0;
+
+                while ((action = getchar()) != '\n')
+                {
+                    key[idx++] = action;
+                }
+
+                key[idx] = '\0';
 
                 if ( mod == 'S' ) {
 
@@ -134,16 +147,7 @@ void GetKey( char key[] ) {
 
     char ch;
     int idx = 0;
-    do {
-        ch = getchar();
-    } while ( ch == ' ' );
 
-    if ( ch == '\n' ) {
-        key[0] = '\0';
-        return;
-    } 
-
-    key[idx++] = ToLower( ch );
 
     while ( true ) {
         ch = ToLower( getchar());
