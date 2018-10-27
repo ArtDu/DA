@@ -11,36 +11,9 @@ bool IsLetter( char ch ) {
     return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' );
 }
 
-void GetKey( char key[] ) {
+void GetKey( char key[] );
 
-    char ch;
-    int idx = 0;
-    do {
-        ch = getchar();
-    } while ( ch == ' ' || ch == '\n' );
-
-
-    key[idx++] = ToLower( ch );
-
-    while ( true ) {
-        ch = ToLower( getchar());
-
-        if ( !IsLetter( ch )) {
-            break;
-        }
-
-        key[idx++] = ch;
-    }
-    key[idx] = '\0';
-}
-
-void GetVal( unsigned long long &val ) {
-    char ch;
-    val = 0;
-    while (( ch = getchar()) != '\n' ) {
-        val = val * 10 + ch - '0';
-    }
-}
+void GetVal( unsigned long long &val );
 
 int main() {
     std::ios_base::sync_with_stdio( false );
@@ -56,7 +29,6 @@ int main() {
         unsigned long long val;
         char mod,
              action;
-        //size_t idx = 0;
 
         do {
 
@@ -119,13 +91,13 @@ int main() {
 
                 if ( mod == 'S' ) {
 
-                    if ( tree.Serialize( key )) {
+                    if ( tree.Save( key )) {
                         printf( "OK\n" );
                     } else {
                         printf( "ERROR: Couldn't create file\n" );
                     }
                 } else {
-                    if ( tree.Deserialize( key )) {
+                    if ( tree.Load( key )) {
                         printf( "OK\n" );
                     } else {
                         printf( "ERROR: Couldn't load file\n" );
@@ -155,4 +127,40 @@ int main() {
         }
     }
 
+}
+
+
+void GetKey( char key[] ) {
+
+    char ch;
+    int idx = 0;
+    do {
+        ch = getchar();
+    } while ( ch == ' ' );
+
+    if ( ch == '\n' ) {
+        key[0] = '\0';
+        return;
+    } 
+
+    key[idx++] = ToLower( ch );
+
+    while ( true ) {
+        ch = ToLower( getchar());
+
+        if ( !IsLetter( ch )) {
+            break;
+        }
+
+        key[idx++] = ch;
+    }
+    key[idx] = '\0';
+}
+
+void GetVal( unsigned long long &val ) {
+    char ch;
+    val = 0;
+    while (( ch = getchar()) != '\n' ) {
+        val = val * 10 + ch - '0';
+    }
 }
