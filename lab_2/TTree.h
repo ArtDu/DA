@@ -25,8 +25,8 @@ public:
     void Insert(TData data);
     void Delete(TData data);
     bool Search(TData &data);
-    bool Serialize(const char* filename);
-    bool Deserialize(const char* filename);
+    bool Save(const char* filename);
+    bool Load(const char* filename);
     void Erase();
     void PrintTree(TNode *node);
 
@@ -48,8 +48,8 @@ private:
     int BalFact(TNode *node);
     int GetHeight(TNode *node);
     bool SearchSub(TNode *&node, TData &data);
-    bool SerializeSub(FILE *f, TNode *node);
-    bool DeserializeSub(FILE *f, TNode *&node);
+    bool SaveSub(FILE *f, TNode *node);
+    bool LoadSub(FILE *f, TNode *&node);
 
 };
 

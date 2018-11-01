@@ -147,7 +147,7 @@ int main()
 
                 if( mod == 'S') {
 
-                    if (tree.Serialize(key)) {
+                    if (tree.Save(key)) {
                         printf("OK\n");
                     }
                     else {
@@ -155,7 +155,7 @@ int main()
                     }
                 }
                 else {
-                    if (tree.Deserialize(key)) {
+                    if (tree.Load(key)) {
                         printf("OK\n");
                     }
                     else {

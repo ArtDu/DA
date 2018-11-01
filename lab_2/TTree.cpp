@@ -235,7 +235,7 @@ bool TTree::Search(TData &data) {
     return true;
 }
 
-bool TTree::Serialize(const char* filename) {
+bool TTree::Save(const char* filename) {
 
 
     FILE *f = fopen(filename, "wb");
@@ -251,14 +251,14 @@ bool TTree::Serialize(const char* filename) {
         return true;
     }
 
-    bool ser = SerializeSub(f, root);
+    bool ser = SaveSub(f, root);
 
     fclose(f);
 
     return ser;
 }
 
-bool TTree::SerializeSub(FILE *f, TNode *node) {
+bool TTree::SaveSub(FILE *f, TNode *node) {
 
     if (node == nullptr) {
         if (fwrite(&END, sizeof(char), 1, f) != 1) {
@@ -276,18 +276,18 @@ bool TTree::SerializeSub(FILE *f, TNode *node) {
     fwrite(&node->data->value, sizeof(node->data->value), 1, f);
     fwrite(&node->height, sizeof(node->height), 1, f);
 
-    if (!SerializeSub(f, node->left)) {
+    if (!SaveSub(f, node->left)) {
         return false;
     }
 
-    if (!SerializeSub(f, node->right)) {
+    if (!SaveSub(f, node->right)) {
         return false;
     }
 
     return true;
 }
 
-bool TTree::Deserialize(const char* filename) {
+bool TTree::Load(const char* filename) {
 
     FILE *f = fopen(filename, "rb");
 
@@ -300,14 +300,14 @@ bool TTree::Deserialize(const char* filename) {
         DeleteNode(root);
     }
 
-    bool deSer = DeserializeSub(f, root);
+    bool deSer = LoadSub(f, root);
 
     fclose(f);
 
     return deSer;
 }
 
-bool TTree::DeserializeSub(FILE *f, TNode *&node) {
+bool TTree::LoadSub(FILE *f, TNode *&node) {
 
     char mark;
     fread(&mark, sizeof(char), 1, f);
@@ -334,11 +334,11 @@ bool TTree::DeserializeSub(FILE *f, TNode *&node) {
         return true;
     }
 
-    if (!DeserializeSub(f, node->left)) {
+    if (!LoadSub(f, node->left)) {
         return false;
     }
 
-    if (!DeserializeSub(f, node->right)) {
+    if (!LoadSub(f, node->right)) {
         return false;
     }
 
