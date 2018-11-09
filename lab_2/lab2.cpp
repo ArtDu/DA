@@ -14,8 +14,8 @@ bool IsLetter(char ch) {
 
 int main()
 {
-    std::ios_base::sync_with_stdio( false );
-    std::cin.tie( nullptr );
+    //std::ios_base::sync_with_stdio( false );
+    //std::cin.tie( nullptr );
     TTree tree;
 
 
@@ -30,35 +30,20 @@ int main()
         do{
 
             action = getchar();
-            if (!std::cin) {
-                std::cout << "ERROR: input option can not be read " << std::endl;
-                std::cin.clear();
-                std::cin.ignore();
-                continue;
-            }
+            
         }
         while( action == '\n' || action == ' ' );
-        if (!std::cin) {
-            std::cout << "ERROR: input option can not be read " << std::endl;
-            std::cin.clear();
-            std::cin.ignore();
-            continue;
-        }
+        
 
 
         if (action == EOF) {
+            //std::cout << std::endl << "Container: avl-tree" << std::endl;
             //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
             return 0;
         }
 
         switch (action) {
             case '+':
-                /*clock_t start, end;
-                double cpu_time_used;
-                start = clock();
-                end = clock();
-                cpu_time_used = ((double) ((end - start))) / 1000;
-                std::cout << cpu_time_used << std::endl;*/
 
                 getchar();
 
@@ -196,5 +181,5 @@ int main()
                 break;
         }
     }
-
+    return 0;
 }
