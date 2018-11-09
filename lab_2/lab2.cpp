@@ -3,34 +3,35 @@
 #include "TTree.h"
 #include <ctime>
 
-char ToLower(char ch) {
+char ToLower( char ch ) {
     return ch >= 'A' && ch <= 'Z' ? ch - 'A' + 'a' : ch;
 }
 
-bool IsLetter(char ch) {
-    return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
+bool IsLetter( char ch ) {
+    return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' );
 }
 
+void GetKey( char key[] );
 
-int main()
-{
-    //std::ios_base::sync_with_stdio( false );
-    //std::cin.tie( nullptr );
+int main() {
+    std::ios_base::sync_with_stdio( false );
+    std::cin.tie( nullptr );
+
+
     TTree tree;
 
+    while ( true ) {
 
-    while( true ) {
         TData data;
         char key[257];
-        char mod;
+        char keyForSearch[257];
         unsigned long long val;
-        char action;
-        size_t idx = 0;
+        char mod, action;
+        int idx;
 
-        do{
+        do {
 
             action = getchar();
-            
         }
         while( action == '\n' || action == ' ' );
         
@@ -38,42 +39,28 @@ int main()
 
         if (action == EOF) {
             //std::cout << std::endl << "Container: avl-tree" << std::endl;
+
             //std::cout << "runtime = " << clock()/1000.0 << std::endl; // время работы программы
             return 0;
         }
 
-        switch (action) {
+        switch ( action ) {
             case '+':
 
                 getchar();
 
-                while (true) {
-                    action = ToLower(getchar());
+                GetKey( key );
+                GetVal( val );
 
-                    if (!IsLetter(action)) {
-                        break;
-                    }
-
-                    key[idx++] = action;
-                }
-                key[idx] = '\0';
-                val = 0;
-                while ((action = getchar()) != '\n') {
-                    val = val * 10 + action - '0';
-                }
-
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
+                data.key = new char[strlen( key ) + 1];
+                strcpy( data.key, key );
                 data.value = val;
 
-                if (!tree.Search(data)) {
-
-                    tree.Insert(data);
-                    printf("OK\n");
-
-                }
-                else {
-                    printf("Exist\n");
+                if ( !tree.Search( data )) {
+                    tree.Insert( data );
+                    printf( "OK\n" );
+                } else {
+                    printf( "Exist\n" );
                 }
 
                 delete[] data.key;
@@ -83,27 +70,16 @@ int main()
 
                 getchar();
 
-                while (true) {
-                    action = ToLower(getchar());
+                GetKey( key );
 
-                    if (!IsLetter(action)) {
-                        break;
-                    }
+                data.key = new char[strlen( key ) + 1];
+                strcpy( data.key, key );
 
-                    key[idx++] = action;
-                }
-                key[idx] = '\0';
-
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
-
-                if (!tree.Search(data)) {
-                    printf("NoSuchWord\n");
-                }
-                else {
-                    tree.Delete(data);
-
-                    printf("OK\n");
+                if ( !tree.Search( data )) {
+                    printf( "NoSuchWord\n" );
+                } else {
+                    tree.Delete( data );
+                    printf( "OK\n" );
                 }
                 delete[] data.key;
                 break;
@@ -111,14 +87,7 @@ int main()
 
                 getchar();
 
-                key[0] = action;
-
-                while ((action = getchar()) != ' ')
-                {
-                    key[idx++] = action;
-                }
-
-                key[idx] = '\0';
+                GetKey( key );
                 mod = key[0];
 
                 idx = 0;
@@ -130,7 +99,7 @@ int main()
 
                 key[idx] = '\0';
 
-                if( mod == 'S') {
+                if ( mod == 'S' ) {
 
                     if (tree.Save(key)) {
                         printf("OK\n");
@@ -145,32 +114,22 @@ int main()
                     }
                     else {
                         printf("ERROR: Couldn't load file\n");
+
                     }
                 }
 
                 break;
-            case '3':
-                //tree.Print();
-                break;
+
             default:
 
-                key[0] = ToLower(action);
-                ++idx;
+                keyForSearch[0] = ToLower(action);
+                keyForSearch[1] = '\0';
 
-                while (true) {
-                    action = ToLower(getchar());
+                GetKey( key );
+                strcat( keyForSearch, key );
+                data.key = new char[strlen(keyForSearch) + 1];
+                strcpy(data.key, keyForSearch);
 
-                    if (!IsLetter(action)) {
-                        break;
-                    }
-
-                    key[idx++] = action;
-                }
-
-                key[idx] = '\0';
-
-                data.key = new char[strlen(key) + 1];
-                strcpy(data.key, key);
                 if (!tree.Search(data)) {
                     printf("NoSuchWord\n");
                 }
@@ -182,4 +141,32 @@ int main()
         }
     }
     return 0;
+}
+
+
+void GetKey( char key[] ) {
+
+    char ch;
+    int idx = 0;
+
+
+    while ( true ) {
+        ch = ToLower( getchar());
+
+        if ( !IsLetter( ch )) {
+            break;
+        }
+
+        key[idx++] = ch;
+    }
+    key[idx] = '\0';
+}
+
+void GetVal( unsigned long long &val ) {
+    char ch;
+    val = 0;
+    while (( ch = getchar()) != '\n' ) {
+        val = val * 10 + ch - '0';
+    }
+
 }

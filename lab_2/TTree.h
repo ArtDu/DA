@@ -7,15 +7,15 @@
 #include <cstdio>
 
 struct TData {
-    char *key;
+    char* key;
     unsigned long long value;
 };
 
 struct TNode {
     uint8_t height;
-    TData *data;
-    TNode *left;
-    TNode *right;
+    TData* data;
+    TNode* left;
+    TNode* right;
 };
 
 class TTree {
@@ -29,6 +29,7 @@ public:
     bool Load(const char* filename);
     void Erase();
     void PrintTree(TNode *node);
+
 
     ~TTree();
 
@@ -50,6 +51,7 @@ private:
     bool SearchSub(TNode *&node, TData &data);
     bool SaveSub(FILE *f, TNode *node);
     bool LoadSub(FILE *f, TNode *&node);
+
 
 };
 
