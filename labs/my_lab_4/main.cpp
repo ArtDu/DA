@@ -1,30 +1,31 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
-void z_func(std::vector<uint32_t> &z, const std::vector<uint64_t> &string);
+void z_func(std::vector<int32_t> &z, const std::vector<int64_t> &string);
 
-void prefix_func(std::vector<uint32_t> &sp, const std::vector<uint32_t> &z);
+void prefix_func(std::vector<int32_t> &sp, const std::vector<int32_t> &z);
 
-void failure_func(std::vector<uint32_t> &F, const std::vector<uint32_t> &sp);
+void failure_func(std::vector<int32_t> &F, const std::vector<int32_t> &sp);
 
-void kmp(const std::vector<uint64_t> &string, const std::vector<uint32_t> &F);
+void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F);
 
-uint64_t read_number(bool &EOF_status, uint32_t &column, uint32_t &row, bool &newline);
+int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newline);
 
 int main() {
 
-    std::vector<uint64_t> string;
-    std::vector<uint32_t> z;
-    std::vector<uint32_t> sp;
-    std::vector<uint32_t> F;
+    std::vector<int64_t> string;
+    std::vector<int32_t> z;
+    std::vector<int32_t> sp;
+    std::vector<int32_t> F;
 
     int32_t c;
-    uint64_t num = 0;
+    int64_t num = 0;
     bool last = true;
     do {
         c = getchar();
-    } while (c == ' ');
+    } while (c == ' ' );
     if (c == EOF) {
         return 0;
     }
@@ -62,13 +63,13 @@ int main() {
     return 0;
 }
 
-void z_func(std::vector<uint32_t> &z, const std::vector<uint64_t> &string) {
+void z_func(std::vector<int32_t> &z, const std::vector<int64_t> &string) {
     size_t string_size = string.size();
     z.resize(string_size, 0);
-    uint32_t l = 0, r = 0;
-    for (uint32_t k = 1; k < string_size; ++k) {
+    int32_t l = 0, r = 0;
+    for (int32_t k = 1; k < string_size; ++k) {
         if (k > r) {
-            uint32_t i = 0, j = k;
+            int32_t i = 0, j = k;
             while (string[i] == string[j]) {
                 i++;
                 j++;
@@ -79,11 +80,11 @@ void z_func(std::vector<uint32_t> &z, const std::vector<uint64_t> &string) {
                 l = k;
             }
         } else {
-            uint32_t k_ = k - l;
+            int32_t k_ = k - l;
             if (z[k_] < r - k + 1) {
                 z[k] = z[k_];
             } else {
-                uint32_t i = z[l] + 1, j = r + 1;
+                int32_t i = r - k + 1, j = r + 1;
                 while (string[i] == string[j]) {
                     i++;
                     j++;
@@ -97,27 +98,33 @@ void z_func(std::vector<uint32_t> &z, const std::vector<uint64_t> &string) {
 
 }
 
-void prefix_func(std::vector<uint32_t> &sp, const std::vector<uint32_t> &z) {
+void prefix_func(std::vector<int32_t> &sp, const std::vector<int32_t> &z) {
     size_t z_size = z.size();
+    std::vector<int32_t> spstrong(z_size, 0);
     sp.resize(z_size, 0);
-    for (uint64_t j = z_size - 1; j > 1; --j) {
-        uint64_t i = j + z[j] - 1;
+    for (int64_t j = z_size - 1; j > 0; --j) {
+        int64_t i = j + z[j] - 1;
         if (i < z_size)
-            sp[i] = z[j];
+            spstrong[i] = z[j];
+    }
+
+    sp[z_size - 1] = spstrong[z_size - 1];
+    for (int32_t i = z_size - 2; i > 0; i--) {
+        sp[i] = std::max(sp[i + 1] - 1, spstrong[i]);
     }
 }
 
-void failure_func(std::vector<uint32_t> &F, const std::vector<uint32_t> &sp) {
+void failure_func(std::vector<int32_t> &F, const std::vector<int32_t> &sp) {
     size_t sp_size = sp.size();
-    F.resize(sp_size, 0);
-    for (int i = 1; i < sp_size; ++i) {
+    F.resize(sp_size + 1, 0);
+    for (int i = 1; i < sp_size + 1; ++i) {
         F[i] = sp[i - 1];
     }
 }
 
-uint64_t read_number(bool &EOF_status, uint32_t &column, uint32_t &row, bool &newline) {
+int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newline) {
     int32_t c;
-    uint64_t num = 0;
+    int64_t num = 0;
     do {
         c = getchar();
         if (c == '\n') {
@@ -146,12 +153,12 @@ uint64_t read_number(bool &EOF_status, uint32_t &column, uint32_t &row, bool &ne
     return num;
 }
 
-void kmp(const std::vector<uint64_t> &string, const std::vector<uint32_t> &F) {
-    std::queue<std::pair<uint32_t, uint32_t >> pos;
-    std::pair<uint32_t, uint32_t> pos_pair;
-    uint32_t column = 0, row = 1;
-    uint64_t t;
-    uint64_t p = 0, n = string.size();
+void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
+    std::queue<std::pair<int32_t, int32_t >> pos;
+    std::pair<int32_t, int32_t> pos_pair;
+    int32_t column = 0, row = 1;
+    int64_t t;
+    int64_t p = 0, n = string.size();
     bool exit = false;
     bool new_line = false;
     bool skip = false;
@@ -210,7 +217,6 @@ void kmp(const std::vector<uint64_t> &string, const std::vector<uint32_t> &F) {
                 new_line = false;
             }
         }
-
         p = F[p];
     }
 }
