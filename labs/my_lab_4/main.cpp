@@ -129,6 +129,7 @@ int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newli
         c = getchar();
         if (c == '\n') {
             row++;
+            column = 0;
         }
     } while (c == ' ' || c == '\n');
     do {
