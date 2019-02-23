@@ -27,6 +27,8 @@ void TSuffixTree::FindEnd(int positionBegin, int positionEnd) {
     while (true) {
         j = 0;
         if (i == positionEnd && text[i] == activeNode->tag[j] && j < activeNode->tag.size()) {
+            //suffix[j..i+1] over and edge ain't over
+            //rule 3
             break;
         }
 
@@ -35,48 +37,52 @@ void TSuffixTree::FindEnd(int positionBegin, int positionEnd) {
             ++i; // in text j..i
             ++j; // in edge
         }
-        if (j == activeNode->tag.size()) { //edge over
+        if (j == activeNode->tag.size()) {
+            //edge over
             if (i == positionEnd) {
+                //suffix[j..i] over
                 auto it = activeNode->to.find(text[i]);
-                if (it != activeNode->to.end()) { // continuation path exists
+                if (it != activeNode->to.end()) {
+                    // continuation path exists
+                    // => suffix[i+1] == newEdge[0]
+                    //rule 3
                     break;
                 }
-                // and suffix over
-                // add to end (rule 1)
-                if (activeNode->to.size() == 0) {
+
+                if (activeNode->to.empty()) {
+                    // it's leaf
+                    // add to end (rule 1)
                     activeNode->tag.push_back(text[positionEnd]);
                 } else {
+                    //split
+                    //new edge with text[i+1]
                     //rule 2(a)
                     TNode *tmpNode = new TNode(text.substr(i, positionEnd + 1 - i));
                     activeNode->to[text[i]] = tmpNode;
                 }
                 break;
             } else {
+                //suffix[j..i] ain't over
                 //downhill
                 auto it = activeNode->to.find(text[i]);
-                if (it != activeNode->to.end()) { // continuation path exists
+                if (it != activeNode->to.end()) {
+                    // continuation path exists
                     parentNode = activeNode;
                     activeNode = it->second;
                     continue;
-                } else { // add to end of edge
-                    if (activeNode->to.size() == 0) {
-                        activeNode->tag.push_back(text[positionEnd]);
-                    } else {
-                        //rule 2(a)
-                        TNode *tmpNode = new TNode(text.substr(i, positionEnd + 1 - i));
-                        activeNode->to[text[i]] = tmpNode;
-                    }
-                    break;
                 }
             }
-        } else { // edge ain't over
-
-            if (i == positionEnd + 1) { //rule 3 (suffix over)
+        } else {
+            // edge ain't over
+            if (i == positionEnd + 1) {
+                //suffix[j..i+1] over
+                //rule 3
                 break;
             }
 
-            //split (rule 2)
-
+            //split
+            //new edge with text[i+1]
+            //rule 2(b)
             std::string right = text.substr(i, positionEnd + 1 - i);
             std::string newNodeStr = activeNode->tag.substr(0, j);
             TNode *rightNode = new TNode(right);
@@ -98,9 +104,8 @@ void TSuffixTree::Build(int &position) {
         if (it != root->to.end()) {
             parentNode = root;
             activeNode = it->second;
-            //0 1
             FindEnd(i, position);
-        } else {
+        } else { //add node to root
             std::string tmpString = text.substr(i, position + 1 - i);
             TNode *tmpNode = new TNode(tmpString);
             root->to[tmpString[0]] = tmpNode;
