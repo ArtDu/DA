@@ -16,6 +16,9 @@ public:
     std::map<char, TNode *> to;
     std::string tag;
 
+    TNode* suffLink;
+    TNode* parentNode;
+
     TNode(std::string marker);
 
     ~TNode() {};
@@ -32,14 +35,17 @@ private:
     std::string text;
     TNode *root;
     TNode *activeNode;
-    TNode *parentNode;
+    TNode *lastAdded;
+    std::string activeEdge;
+    TNode *fullStringLeaf;
 
 
     void NodePrint(TNode *node, int dpth);
 
     void Build(int &position);
 
-    void FindEnd(int positionBegin, int positionEnd);
+    void NaiveAlgo(int positionBegin, int positionEnd);
+    void ImprovedAlgo(int positionBegin, int positionEnd);
 };
 
 
