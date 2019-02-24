@@ -14,12 +14,14 @@ class TNode {
 
 public:
     std::map<char, TNode *> to;
-    std::string tag;
+
+
+    std::string::iterator begin, end;
 
     TNode* suffLink;
     TNode* parentNode;
 
-    TNode(std::string marker);
+    TNode(std::string::iterator begin, std::string::iterator end);
 
     ~TNode() {};
 };
@@ -36,16 +38,14 @@ private:
     TNode *root;
     TNode *activeNode;
     TNode *lastAdded;
-    std::string activeEdge;
-    TNode *fullStringLeaf;
 
 
     void NodePrint(TNode *node, int dpth);
 
-    void Build(int &position);
+    void Build(std::string::iterator& position);
 
-    void NaiveAlgo(int positionBegin, int positionEnd);
-    void ImprovedAlgo(int positionBegin, int positionEnd);
+    void NaiveAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
+    void ImprovedAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
 };
 
 
