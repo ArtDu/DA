@@ -39,6 +39,8 @@ private:
     TNode *activeNode;
     TNode *lastAdded;
 
+    int64_t activeLen;
+
 
     void NodePrint(TNode *node, int dpth);
 
