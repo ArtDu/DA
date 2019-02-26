@@ -2,6 +2,7 @@
 // Created by art on 18.02.19.
 //
 
+#include <algorithm>
 #include "TSuffixTree.h"
 
 
@@ -49,9 +50,6 @@ void TSuffixTree::Build(std::string::iterator &position) {
         if (completePhase) {
             break;
         }
-        /*std::cout << "extension: " << *i << "\n";
-        NodePrint(root, 0);
-        std::cout << std::endl;*/
     }
 
 }
@@ -116,10 +114,6 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
             lenG = lenG - lenOfEdge;
 
         } else {
-            if (lenG == 0) {
-                lenOfLastAddedEdge = std::distance(activeNode->begin, j + 1);
-                break;
-            }
 
             i = i + lenG;
             j = j + lenG;
@@ -146,12 +140,7 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
 
             it = activeNode->to.find(*i);
 
-            if (activeNode->to.empty()) {
-                // it's leaf
-                // add to end (rule 1)
-                activeNode->end = positionEnd;
-                lenOfLastAddedEdge = std::distance(activeNode->begin, i + 1);
-            } else if (it != activeNode->to.end()) {
+            if (it != activeNode->to.end()) {
                 // continuation path exists
                 // downhill
                 activeLen += std::distance(activeNode->begin, activeNode->end);
@@ -231,4 +220,71 @@ void TSuffixTree::NodePrint(TNode *node, int dpth) {
 
 void TSuffixTree::TreePrint() {
     NodePrint(root, 0);
+}
+
+
+
+void TSuffixTree::SearchLeafs(TNode *node, std::vector<int> &answer, int patternLocation) {
+    if (node->end == text.end()) {
+        //leaf found
+        answer.push_back(text.size() - patternLocation + 1);
+    } else {
+        TNode *child;
+        int addDepth;
+        //run through all eddges from this node
+        //and run dfs at them
+        for (auto it = node->to.begin(); it != node->to.end(); ++it) {
+            child = it->second;
+            addDepth = child->end - child->begin; //edge length
+            SearchLeafs(child, answer, patternLocation + addDepth);
+        }
+    }
+}
+
+std::vector<int> TSuffixTree::Search(std::string pattern) {
+    std::vector<int> answer;
+    std::string::iterator patPos = pattern.begin();
+    int patternLocation = 0; //symbols passed at edges
+    TNode *node = root; ///starts from root
+    if (pattern.size() > text.size()) {
+        //pattern larger than text
+        return answer;
+    }
+    //search for all pattern
+    for ( patPos = pattern.begin(); patPos != pattern.end(); ++patPos) {
+        auto pathTo = node->to.find(*patPos);
+        if (pathTo == node->to.end()) {
+            //mismatch
+            //no such symbol from node
+            return answer;
+        }
+        node = pathTo->second;
+        patternLocation += node->end - node->begin;
+        for (std::string::iterator edgePos = node->begin;
+             edgePos != node->end && patPos != pattern.end(); ++edgePos, patPos++) {
+            if (*edgePos != *patPos) {
+                //mismatch inside edge
+                return answer;
+            }
+        }
+        if (patPos == pattern.end())
+            //exactly at node
+            break;
+        --patPos;
+    }
+    //node found run dfs for it
+    SearchLeafs(node, answer, patternLocation);
+    //sort pattern indexes
+    std::sort(answer.begin(), answer.end());
+    return answer;
+}
+
+TSuffixTree::~TSuffixTree() {
+    RecursiveDestroy(root);
+}
+
+void TSuffixTree::RecursiveDestroy(TNode *node) {
+    for (auto it = node->to.begin(); it != node->to.end(); ++it)
+        RecursiveDestroy(it->second);
+    delete node;
 }
