@@ -38,10 +38,14 @@ private:
     TNode *root;
     TNode *activeNode;
     TNode *lastAdded;
-    TNode *firstLeaf;
+    TNode *lastLeaf;
+
+    bool completePhase;
 
     int64_t activeLen; //last added suffix's len from begin to edge before leaf
-    int64_t lenOfLastAddedEdge; //len of full last added sufix
+    int64_t lenOfLastAddedEdge; //len of full last added
+    int64_t lenOfLast;
+    int64_t skipByRule1;
 
 
     void NodePrint(TNode *node, int dpth);

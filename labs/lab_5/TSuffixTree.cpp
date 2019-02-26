@@ -13,13 +13,14 @@ TSuffixTree::TSuffixTree(std::string str) {
     text = str;
     root = new TNode(str.end(), str.end());
     lastAdded = root;
-    activeNode = root;
     root->parentNode = root;
 
-    firstLeaf = new TNode(text.begin(), text.begin());
-    firstLeaf->parentNode = root;
-    root->to[*(firstLeaf->begin)] = firstLeaf;
-    activeNode = firstLeaf;
+    //add fst leaf
+    lastLeaf = new TNode(text.begin(), text.end());
+    lastLeaf->parentNode = root;
+    root->to[*(lastLeaf->begin)] = lastLeaf;
+    activeNode = lastLeaf;
+    skipByRule1 = 1;
 
 
     for (std::string::iterator it = text.begin(); it != text.end(); ++it) {
@@ -35,14 +36,19 @@ TSuffixTree::TSuffixTree(std::string str) {
 
 void TSuffixTree::Build(std::string::iterator &position) {
     lastAdded = root;
-    activeNode = firstLeaf;
-    firstLeaf->end++;
-    activeLen = std::distance(text.begin(), firstLeaf->end) - std::distance(firstLeaf->begin, firstLeaf->end);
-    lenOfLastAddedEdge =  std::distance(firstLeaf->begin, firstLeaf->end);
 
-    for (std::string::iterator i = text.begin() + 1; i != position + 1; ++i) {
+    lenOfLastAddedEdge = std::distance(lastLeaf->begin, position + 1);
+    activeLen = std::distance(text.begin() + skipByRule1 - 1, position + 1) - lenOfLastAddedEdge;
+    activeNode = lastLeaf;
+
+    completePhase = false;
+    for (std::string::iterator i = text.begin() + skipByRule1; i != position + 1; ++i) {
 
         ImprovedAlgo(i, position + 1);
+
+        if (completePhase) {
+            break;
+        }
         /*std::cout << "extension: " << *i << "\n";
         NodePrint(root, 0);
         std::cout << std::endl;*/
@@ -61,13 +67,12 @@ void TSuffixTree::ImprovedAlgo(std::string::iterator positionBegin, std::string:
     } else {
         //start from node
         //"xalpha" added need to add "alpha"
-        //lenOfLastAddedEdge += activeLen;
+
         activeLen--;
         positionBegin = positionBegin + activeLen;
-
         activeNode = activeNode->parentNode->suffLink;
 
-        activeLen -= std::distance(activeNode->begin, activeNode->end);
+        activeLen -= std::distance(activeNode->begin, activeNode->end); //cause this edge's len add when downhill
     }
 
     NaiveAlgo(positionBegin, positionEnd);
@@ -83,13 +88,15 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
     } else {
         //add node to root
         //rule 2(a)
-        TNode *leaf = new TNode(positionBegin, positionEnd);
+        TNode *leaf = new TNode(positionBegin, text.end());
+        skipByRule1++;
         leaf->parentNode = activeNode;
         activeNode->to[*(leaf->begin)] = leaf;
 
 
         activeLen += std::distance(activeNode->begin, activeNode->end);
         activeNode = leaf;
+        lastLeaf = leaf;
 
         return;
     }
@@ -111,7 +118,6 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
         } else {
             if (lenG == 0) {
                 lenOfLastAddedEdge = std::distance(activeNode->begin, j + 1);
-                //activeLen = activeLen - (std::distance(activeNode->begin, activeNode->end) - std::distance(activeNode->begin, j+1));
                 break;
             }
 
@@ -122,16 +128,7 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
                 j--;
             }
             lenG = 0;
-        }
-
-        /*while (*i == *j && i != positionEnd && j != activeNode->end) {
-            ++i; // in text j..i
-            ++j; // in edge
-        }*/
-
-        if (*i == '\0') {
-            i--;
-            j--;
+            lenOfLastAddedEdge = 0;
         }
 
 
@@ -139,7 +136,7 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
             //suffix over
             //rule 3
             lenOfLastAddedEdge = std::distance(activeNode->begin, j);
-            //activeLen = activeLen - (std::distance(activeNode->begin, activeNode->end) - std::distance(activeNode->begin, j));
+            completePhase = true;
             break;
         }
 
@@ -153,38 +150,39 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
                 // it's leaf
                 // add to end (rule 1)
                 activeNode->end = positionEnd;
-                lenOfLastAddedEdge = std::distance(activeNode->begin, activeNode->end);
+                lenOfLastAddedEdge = std::distance(activeNode->begin, i + 1);
             } else if (it != activeNode->to.end()) {
                 // continuation path exists
-                //downhill
+                // downhill
                 activeLen += std::distance(activeNode->begin, activeNode->end);
                 activeNode = it->second;
                 j = activeNode->begin;
                 continue;
             } else {
-                //split
-                //new edge with text[i+1]
-                //rule 2(a)
-                TNode *tmpNode = new TNode(i, positionEnd);
+                // split
+                // new edge with text[i+1]
+                // rule 2(a)
+                TNode *tmpNode = new TNode(i, text.end());
+                skipByRule1++;
                 tmpNode->parentNode = activeNode;
                 activeNode->to[*(tmpNode->begin)] = tmpNode;
+                lastLeaf = tmpNode;
 
 
                 activeLen += std::distance(activeNode->begin, activeNode->end);
                 activeNode = tmpNode;
-                lenOfLastAddedEdge = std::distance(activeNode->begin, activeNode->end);
+                lenOfLastAddedEdge = std::distance(activeNode->begin, i + 1);
             }
             break;
         } else {
             // edge ain't over
 
-
-
             //split
             //new edge with text[i ... positionEnd ]
             //rule 2(b)
 
-            TNode *rightNode = new TNode(i, positionEnd);
+            TNode *rightNode = new TNode(i, text.end());
+            skipByRule1++;
             TNode *newNode = new TNode(activeNode->begin, j);
 
             activeNode->begin = j;
@@ -200,7 +198,8 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
 
             activeLen += std::distance(newNode->begin, newNode->end);
             activeNode = rightNode;
-            lenOfLastAddedEdge = std::distance(activeNode->begin, activeNode->end);
+            lastLeaf = rightNode;
+            lenOfLastAddedEdge = std::distance(activeNode->begin, i + 1);
 
             if (lastAdded != root) {
                 lastAdded->suffLink = newNode;
@@ -213,9 +212,6 @@ void TSuffixTree::NaiveAlgo(std::string::iterator positionBegin, //suffix[posBeg
 
     }
 }
-
-
-//fefbeafbdebcfeccabdecdeaebafbebdecfdbbdcbefdaffbdedfafefaabe
 
 void TSuffixTree::NodePrint(TNode *node, int dpth) {
     for (int i = 0; i < dpth; ++i) {
