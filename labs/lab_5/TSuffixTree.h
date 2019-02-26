@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 
 class TNode {
@@ -33,6 +34,10 @@ public:
 
     void TreePrint();
 
+    std::vector<int> Search(std::string pattern);
+
+    virtual ~TSuffixTree();
+
 private:
     std::string text;
     TNode *root;
@@ -43,8 +48,6 @@ private:
     bool completePhase;
 
     int64_t activeLen; //last added suffix's len from begin to edge before leaf
-    int64_t lenOfLastAddedEdge; //len of full last added
-    int64_t lenOfLast;
     int64_t skipByRule1;
 
 
@@ -52,9 +55,13 @@ private:
 
     void Build(std::string::iterator &position);
 
+    void ImprovedAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
+
     void NaiveAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
 
-    void ImprovedAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
+    void SearchLeafs(TNode *node, std::vector<int> &answer, int patternLocations);
+
+    void RecursiveDestroy(TNode *node);
 };
 
 
