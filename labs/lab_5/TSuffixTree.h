@@ -16,10 +16,10 @@ public:
     std::map<char, TNode *> to;
 
 
-    std::string::iterator begin, end;
+    std::string::iterator begin, end; //string in edge (text[ begin, end - 1 ])
 
-    TNode* suffLink;
-    TNode* parentNode;
+    TNode *suffLink;
+    TNode *parentNode; // for rule 2b(split)
 
     TNode(std::string::iterator begin, std::string::iterator end);
 
@@ -38,15 +38,18 @@ private:
     TNode *root;
     TNode *activeNode;
     TNode *lastAdded;
+    TNode *firstLeaf;
 
-    int64_t activeLen;
+    int64_t activeLen; //last added suffix's len from begin to edge before leaf
+    int64_t lenOfLastAddedEdge; //len of full last added sufix
 
 
     void NodePrint(TNode *node, int dpth);
 
-    void Build(std::string::iterator& position);
+    void Build(std::string::iterator &position);
 
     void NaiveAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
+
     void ImprovedAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
 };
 
