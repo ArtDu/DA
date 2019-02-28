@@ -3,15 +3,15 @@
 #include <queue>
 #include <algorithm>
 
-void z_func(std::vector<int32_t> &z, const std::vector<int64_t> &string);
+void ZFunc(std::vector<int32_t> &z, const std::vector<int64_t> &string);
 
-void prefix_func(std::vector<int32_t> &sp, const std::vector<int32_t> &z);
+void PrefixFunc(std::vector<int32_t> &sp, const std::vector<int32_t> &z);
 
-void failure_func(std::vector<int32_t> &F, const std::vector<int32_t> &sp);
+void FailureFunc(std::vector<int32_t> &F, const std::vector<int32_t> &sp);
 
-void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F);
+void Kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F);
 
-int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newline);
+int64_t ReadNumber(bool &EOF_status, int32_t &column, int32_t &row, bool &newline);
 
 int main() {
 
@@ -56,14 +56,14 @@ int main() {
         string.push_back(num);
     }
 
-    z_func(z, string);
-    prefix_func(sp, z);
-    failure_func(F, sp);
-    kmp(string, F);
+    ZFunc(z, string);
+    PrefixFunc(sp, z);
+    FailureFunc(F, sp);
+    Kmp(string, F);
     return 0;
 }
 
-void z_func(std::vector<int32_t> &z, const std::vector<int64_t> &string) {
+void ZFunc(std::vector<int32_t> &z, const std::vector<int64_t> &string) {
     size_t string_size = string.size();
     z.resize(string_size, 0);
     int32_t l = 0, r = 0;
@@ -98,7 +98,7 @@ void z_func(std::vector<int32_t> &z, const std::vector<int64_t> &string) {
 
 }
 
-void prefix_func(std::vector<int32_t> &sp, const std::vector<int32_t> &z) {
+void PrefixFunc(std::vector<int32_t> &sp, const std::vector<int32_t> &z) {
     size_t z_size = z.size();
     std::vector<int32_t> spstrong(z_size, 0);
     sp.resize(z_size, 0);
@@ -114,7 +114,7 @@ void prefix_func(std::vector<int32_t> &sp, const std::vector<int32_t> &z) {
     }
 }
 
-void failure_func(std::vector<int32_t> &F, const std::vector<int32_t> &sp) {
+void FailureFunc(std::vector<int32_t> &F, const std::vector<int32_t> &sp) {
     size_t sp_size = sp.size();
     F.resize(sp_size + 1, 0);
     for (int i = 1; i < sp_size + 1; ++i) {
@@ -122,7 +122,7 @@ void failure_func(std::vector<int32_t> &F, const std::vector<int32_t> &sp) {
     }
 }
 
-int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newline) {
+int64_t ReadNumber(bool &EOF_status, int32_t &column, int32_t &row, bool &newline) {
     int32_t c;
     int64_t num = 0;
     do {
@@ -154,7 +154,7 @@ int64_t read_number(bool &EOF_status, int32_t &column, int32_t &row, bool &newli
     return num;
 }
 
-void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
+void Kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
     std::queue<std::pair<int32_t, int32_t >> pos;
     std::pair<int32_t, int32_t> pos_pair;
     int32_t column = 0, row = 1;
@@ -163,7 +163,7 @@ void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
     bool exit = false;
     bool new_line = false;
     bool skip = false;
-    t = read_number(exit, column, row, new_line);
+    t = ReadNumber(exit, column, row, new_line);
     if (exit)
         return;
     pos_pair = std::make_pair(row, column);
@@ -181,7 +181,7 @@ void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
             if (exit) {
                 break;
             }
-            t = read_number(exit, column, row, new_line);
+            t = ReadNumber(exit, column, row, new_line);
             pos_pair = std::make_pair(row, column);
             if (p == n) {
                 skip = true;
@@ -206,7 +206,7 @@ void kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F) {
             break;
 
         if (p == 0) {
-            t = read_number(exit, column, row, new_line);
+            t = ReadNumber(exit, column, row, new_line);
             pos_pair = std::make_pair(row, column);
             if (pos.size() == n) {
                 pos.pop();

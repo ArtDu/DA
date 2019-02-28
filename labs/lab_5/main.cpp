@@ -9,7 +9,7 @@ using namespace std;
 int main() {
 
 
-    
+
     string text;
     cin >> text;
     TSuffixTree tree(text + "$");
