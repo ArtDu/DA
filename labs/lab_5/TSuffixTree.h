@@ -48,6 +48,9 @@ private:
     bool completePhase;
 
     int64_t activeLen; //last added suffix's len from begin to edge before leaf
+
+    int64_t lenOfLastAddedEdge; //len of full last added
+
     int64_t skipByRule1;
 
 
@@ -59,9 +62,10 @@ private:
 
     void NaiveAlgo(std::string::iterator positionBegin, std::string::iterator positionEnd);
 
+    void RecursiveDestroy(TNode *node);
+
     void SearchLeafs(TNode *node, std::vector<int> &answer, int patternLocations);
 
-    void RecursiveDestroy(TNode *node);
 };
 
 
