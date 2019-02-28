@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <chrono>
 
 void ZFunc(std::vector<int32_t> &z, const std::vector<int64_t> &string);
 
@@ -14,6 +15,8 @@ void Kmp(const std::vector<int64_t> &string, const std::vector<int32_t> &F);
 int64_t ReadNumber(bool &EOF_status, int32_t &column, int32_t &row, bool &newline);
 
 int main() {
+
+    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
     std::vector<int64_t> string;
     std::vector<int32_t> z;
@@ -60,6 +63,14 @@ int main() {
     PrefixFunc(sp, z);
     FailureFunc(F, sp);
     Kmp(string, F);
+
+    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+    std::cout << "Search: KMP" << std::endl;
+    std::cout << "Time of working ";
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>( end - start ).count();
+    std::cout << " ms." << std::endl;
+
+
     return 0;
 }
 
