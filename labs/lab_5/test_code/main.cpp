@@ -1,18 +1,15 @@
-
-
 #include "TSuffixTree.h"
-
+#include <string>
+#include <iostream>
 #include <chrono>
 
-using namespace std;
-
-int main() {
-
+int main(void)
+{
 
     //std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
-    string text;
-    cin >> text;
+    std::string text;
+    std::cin >> text;
     TSuffixTree tree(text + "$");
 
     //tree.TreePrint();
@@ -29,8 +26,10 @@ int main() {
         }
         ++count;
     }
+
+
     /*std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "Search: suffix tree" << std::endl;
+    std::cout << "Search: " << std::endl;
     std::cout << "Time of working ";
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>( end - start ).count();
     std::cout << " ms." << std::endl;*/
@@ -38,3 +37,4 @@ int main() {
     return 0;
 }
 
+//axabxb
