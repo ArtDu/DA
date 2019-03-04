@@ -37,23 +37,39 @@ spiltStringBySpaceForText(bool &exit, string &str, vector<pair<pair<int32_t, int
 
 int main() {
 
-    vector<vector<string >> patterns;
+    vector<pair<vector<string>, int32_t >> patterns;
+    vector<string> pattern;
 
-    while(true) {
-        vector<string> pattern;
-        string str;
-        getline(cin, str);
-
-        if(str=="")
-            break;
+    string str;
+    getline(cin, str);
+    splitStringInVector(str, pattern);
 
 
-        splitStringInVector(str, pattern);
-        patterns.push_back(pattern);
+    int32_t pos = 0;
+    int i;
+    for (i = 0; i < pattern.size(); ++i) {
+
+        if (pattern[i] == "?") {
+            if (i != 0) {
+                vector<string> patternTmp(pattern.begin() + pos, pattern.begin() + i);
+                auto tmpPair = make_pair(patternTmp, pos);
+                patterns.push_back(tmpPair);
+            }
+            while (pattern[i] == "?" && i < pattern.size()) {
+                i++;
+            }
+            pos = i;
+        }
+
+    }
+    if (pos != i) {
+        vector<string> patternTmp(pattern.begin() + pos, pattern.begin() + i);
+        auto tmpPair = make_pair(patternTmp, pos);
+        patterns.push_back(tmpPair);
     }
 
-    KeysTree tree;
-    tree.BuildTree(patterns);
+    KeysTree* tree = new KeysTree;
+    tree->BuildTree(patterns);
 
 
     string vals;
@@ -67,7 +83,7 @@ int main() {
             break;
     }
 
-    tree.Search(text);
+    tree->Search(text);
 
     return 0;
 }
