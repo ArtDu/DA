@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -g -std=c++11 -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm
+FLAGS = -std=c++11 -g  -lm
 SOURCES = main.cpp KeysTree.cpp
 EXECUTABLE = main
 all: build

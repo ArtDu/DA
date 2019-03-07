@@ -22,10 +22,8 @@ public:
 
     KTNode *suffLink;
 
-    //KTNode(string key, int32_t list, int32_t dist);
+    KTNode(string key, int32_t list, int32_t dist);
     KTNode(string key, int32_t dist);
-
-    //~KTNode();
 };
 
 
@@ -34,27 +32,21 @@ public:
 
     KeysTree();
 
-    void BuildTree(vector<pair<vector<string>, int32_t >>& patterns);
+    void BuildTree(vector<vector<string >> &patterns);
 
-    void Search(vector<pair<pair<int32_t, int32_t>, string >> &text);
+    void Search(vector<pair<pair<int32_t, int32_t>, string >> &text, int32_t row, int32_t cols);
 
     void TreePrint();
 
-    //~KeysTree();
-
-    //void DeleteNode(KTNode* node);
-
 private:
-
-    vector<int32_t > C;
-
-    size_t sizeOfPatterns;
 
     void NodePrint(KTNode *node, int dpth, std::string x);
 
     void AddSuffLinks();
 
-    void BuildOnePattern(vector<string> &pattern, int32_t &fstPos);
+    void BuildOnePattern(vector<string> &pattern, int32_t &pattNum);
+
+    vector<vector<int32_t >> M;
 
     KTNode *root;
 

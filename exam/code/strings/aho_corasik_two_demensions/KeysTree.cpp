@@ -2,57 +2,29 @@
 // Created by art on 04.03.19.
 //
 
+
+//code complete without 2nd phase
+
 #include "KeysTree.h"
 
-/*KTNode::KTNode(string key, int32_t list, int32_t dist)
+KTNode::KTNode(string key, int32_t list, int32_t dist)
         : _key(key), suffLink(nullptr), dist(dist) {
     this->_list.push_back(list);
-}*/
+}
 
 KTNode::KTNode(string key, int32_t dist)
-        : _key(key), dist(dist) {
-    suffLink = nullptr;
-}
-
-/*KTNode::~KTNode() {
-    for (auto i : this->to) {
-        delete i.second;
-    }
-
-}
-
-KeysTree::~KeysTree() {
-    this->C.clear();
-    delete root;
-
-}*/
-
-/*void KeysTree::DeleteNode(KTNode *node) {
-
-    if(node == nullptr)
-        return;
-
-    for (auto i : node->to) {
-        DeleteNode(i.second);
-        i.second = nullptr;
-    }
-    node->to.clear();
-    delete node;
-}*/
+        : _key(key), suffLink(nullptr), dist(dist) {}
 
 KeysTree::KeysTree() {
-
     root = new KTNode("", 0);
-
+    //root->suffLink = root;
 }
 
-void KeysTree::BuildTree(vector<pair<vector<string>, int32_t >> &patterns) {
-
-    sizeOfPatterns = patterns.size();
-
+void KeysTree::BuildTree(vector<vector<string >> &patterns) {
+    int32_t i = 1;
     for (auto pattern : patterns) {
-        BuildOnePattern(pattern.first, pattern.second);
-
+        BuildOnePattern(pattern, i);
+        i++;
     }
 
     AddSuffLinks();
@@ -61,7 +33,7 @@ void KeysTree::BuildTree(vector<pair<vector<string>, int32_t >> &patterns) {
 
 }
 
-void KeysTree::BuildOnePattern(vector<string> &pattern, int32_t &fstBeg) {
+void KeysTree::BuildOnePattern(vector<string> &pattern, int32_t &pattNum) {
 
     KTNode *activeNode = root;
     map<string, KTNode *>::iterator it;
@@ -69,7 +41,7 @@ void KeysTree::BuildOnePattern(vector<string> &pattern, int32_t &fstBeg) {
     int32_t i = 0;
     while (true) {
         if (i == pattern.size()) {
-            activeNode->_list.push_back(fstBeg);
+            activeNode->_list.push_back(pattNum);
             break;
         }
         it = activeNode->to.find(pattern[i]);
@@ -132,12 +104,16 @@ void KeysTree::AddSuffLinks() {
     }
 }
 
-void KeysTree::Search(vector<pair<pair<int32_t, int32_t>, string >> &text) {
+void KeysTree::Search(vector<pair<pair<int32_t, int32_t>, string >> &text, int32_t row, int32_t cols) {
 
-    map<string, KTNode *>::iterator it;
+    M.resize(row);
+    for (auto &i : M) {
+        i.resize(cols, 0);
+    }
+
 
     size_t m = text.size();
-    C.resize(m, 0);
+    map<string, KTNode *>::iterator it;
 
     int32_t l = 0;
     int32_t c = 0;
@@ -149,24 +125,26 @@ void KeysTree::Search(vector<pair<pair<int32_t, int32_t>, string >> &text) {
 
             KTNode *w_ = it->second;
 
-            //есть вхождение в узле, лежащем на той же ветке
             if (!w_->_list.empty()) {
                 for (auto i : w_->_list) {
-                    C[l - i]++;
+                    int32_t y = text[l].first.first - 1;
+                    int32_t x = text[l].first.second - 1;
+                    M[y][x] = i;
                     //cout << text[l].first.first << ", " << text[l].first.second << ", " << i << "\n";
                 }
             }
             KTNode *tmpW = w_->suffLink;
             while (tmpW != nullptr) {
 
-                //есть вхождения в узлах, в прохождение связи выхода(прохождение по связям неудач)
+
                 if (!tmpW->_list.empty()) {
                     int32_t newBegStr = c - tmpW->dist + 1;
                     for (auto i : tmpW->_list) {
-
-                        C[newBegStr - i]++;
+                        int32_t y = text[l].first.first - 1;
+                        int32_t x = text[l].first.second - 1;
+                        M[y][x] = i;
                         //cout << text[newBegStr].first.first << ", " << text[newBegStr].first.second << ", " << i
-                        //    << "\n";
+                        //     << "\n";
 
                     }
 
@@ -191,10 +169,11 @@ void KeysTree::Search(vector<pair<pair<int32_t, int32_t>, string >> &text) {
     } while (c < m);
 
 
-    for (int j = 0; j < C.size(); ++j) {
-        if (sizeOfPatterns == C[j]) {
-            cout << text[j].first.first << ", " << text[j].first.second << endl;
+    for (auto vec : M) {
+        for (auto point : vec){
+            cout << point << " ";
         }
+        cout << endl;
     }
 
 }
