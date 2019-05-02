@@ -152,9 +152,11 @@ void KeysTree::Search(vector<pair<pair<int32_t, int32_t>, string >> &text) {
             //есть вхождение в узле, лежащем на той же ветке
             if (!w_->_list.empty()) {
                 for (auto i : w_->_list) {
-                    C[l - i]++;
+                    if (l - i >= 0) {
+                        C[l - i]++;
+                    }
                     //cout << text[l].first.first << ", " << text[l].first.second << ", " << i << "\n";
-                }
+                } 
             }
             KTNode *tmpW = w_->suffLink;
             while (tmpW != nullptr) {
