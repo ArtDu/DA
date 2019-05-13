@@ -22,14 +22,14 @@ std::vector<std::string> spiltStringBySpaceInVector(std::string &str) {
     return vec;
 }
 
-invertedIndex::invertedIndex(std::istream &in) {
+invertedIndex::invertedIndex(std::istream &in, int n) {
     std::string str;
 
+    getchar();
     int row = 1;
-    while (getline(in, str)) {
-        if (str == "0")
-            break;
-        allRows.insert(row);
+    for (int i = 0; i < n; ++i) {
+        getline(in, str);
+//        allRows.insert(row);
         spiltAndUpdateDict(row, str, dict);
         row++;
     }

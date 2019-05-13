@@ -4,16 +4,17 @@
 
 int main() {
 
-    std::cout << "Введите текста через <enter>(для конца ввода нажмите 0):\n";
-    invertedIndex iv(std::cin);
+
+
+
+    int n, m;
+    std::cin >> n >> m;
+
+    invertedIndex iv(std::cin, n);
     std::string str;
-    while(true) {
-        std::cout << "Сделайте запрос(для выхода введите 0)" <<std::endl;
-        std::cout << "Доступны запросы word1 <&,|> word2 или ~ word1" <<std::endl;
+    for(int i = 0; i < m; ++i) {
+
         getline(std::cin, str);
-        if(str=="0") {
-            break;
-        }
         iv.query(str);
     }
 

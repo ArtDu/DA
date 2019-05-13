@@ -19,7 +19,7 @@ public:
     std::set<int> queryIntersection(std::set<int> &lhs, std::set<int> &rhs);
     std::set<int> queryUnion(std::set<int> &lhs, std::set<int> &rhs);
     std::set<int> queryNot(std::set<int> &word);
-    invertedIndex(std::istream& in);
+    invertedIndex(std::istream& in, int n);
     void spiltAndUpdateDict(int row, std::string &str, std::map<std::string, std::set<int>> &dict);
 private:
     std::map<std::string, std::set<int>> dict;
