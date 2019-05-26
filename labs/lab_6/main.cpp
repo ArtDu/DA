@@ -41,11 +41,17 @@ int main() {
                 std::cout << bigInt1 * bigInt2 << std::endl;
                 break;
             case '^':
-                if (bigInt1 == TLongInt(1,0) && bigInt2 == TLongInt(1,0)) {
-                    std::cout << "Error" << std::endl;
+                if (bigInt1 == TLongInt(1, 0)) {
+                    if (bigInt2 == TLongInt(1, 0)) {
+                        std::cout << "Error" << std::endl;
+                    } else {
+                        std::cout << 0 << std::endl;
+                    }
+                } else if (bigInt1 == TLongInt(1, 1)) {
+                    std::cout << 1 << std::endl;
                 } else {
                     int numPow = std::stoi(str2);
-                    std::cout << (bigInt1 ^ numPow) << std::endl ;
+                    std::cout << (bigInt1 ^ numPow) << std::endl;
                 }
                 break;
             case '/':
