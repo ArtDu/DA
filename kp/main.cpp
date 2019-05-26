@@ -1,11 +1,6 @@
 #include "invertedIndex.h"
 
-
-
 int main() {
-
-
-
 
     int n, m;
     std::cin >> n >> m;
@@ -17,8 +12,6 @@ int main() {
         getline(std::cin, str);
         iv.query(str);
     }
-
-
 
     return 0;
 }

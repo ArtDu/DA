@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-source=lab5.cpp
-bin=${source%.*}
+
+# *.sh <count of tests> <count of nums in test>
 
 fail=false
 
@@ -9,14 +9,13 @@ if ! make -C ../; then
     exit 1
 fi
 
-if ! make; then
-    echo "ERROR: Failed to compile file."
+if [[ $# -ne 2 ]]	; then
+    echo "ERROR: Failed in args."
     exit 1
 fi
 
-
 mkdir -p tests
-if ! python3 test_gen.py ; then
+if ! python3 test_gen.py $1 $2 ; then
     echo "ERROR: Failed to python generate tests."
     exit 1
 fi
@@ -24,16 +23,12 @@ fi
 for test_file in `ls tests/*.t`; do
     answer_file="${test_file%.*}"
     echo "Execute ${test_file}"
-    if !  ./lab5 < ${test_file} > "${answer_file}.ans" ; then
-        echo "ERROR"
-        continue
-    fi
      if !  ../main < ${test_file} > "${answer_file}.my" ; then
          echo "ERROR"
          continue
      fi
 
-    if ! diff -u "${answer_file}.ans"  "${answer_file}.my" > /dev/null ; then
+    if ! diff "${answer_file}.a"  "${answer_file}.my" > /dev/null ; then
         echo "Failed"
         fail=true
         test=${answer_file}
@@ -44,5 +39,6 @@ done
 
 
 if $fail ; then
+    printf "\n"
     echo "ERROR in $test"
 fi

@@ -4,13 +4,7 @@
 
 #include <algorithm>
 #include "invertedIndex.h"
-
-
-/*
-bool mycomp(const std::pair<int, int> &lhs, const std::pair<int, int> &rhs) {
-    return lhs.first < rhs.first;
-}
-*/
+#include "simple9.h"
 
 
 std::vector<std::string> spiltStringBySpaceInVector(std::string &str) {
@@ -29,10 +23,11 @@ invertedIndex::invertedIndex(std::istream &in, int n) {
     int row = 1;
     for (int i = 0; i < n; ++i) {
         getline(in, str);
-//        allRows.insert(row);
         spiltAndUpdateDict(row, str, dict);
         row++;
     }
+    compress();
+    dict.clear();
 }
 
 void invertedIndex::spiltAndUpdateDict(int row, std::string &str,
@@ -46,9 +41,18 @@ void invertedIndex::spiltAndUpdateDict(int row, std::string &str,
     }
 }
 
-std::set<int> invertedIndex::queryIntersection(std::set<int> &lhs, std::set<int> &rhs) {
 
-    std::set<int> ans;
+
+void invertedIndex::compress() {
+    for (auto word : dict) {
+        compressDict[word.first] = simple9_encode(word.second);
+    }
+}
+
+
+std::vector<uint32_t > invertedIndex::queryIntersection(std::vector<uint32_t > &lhs, std::vector<uint32_t > &rhs) {
+
+    std::vector<uint32_t > ans;
     std::set_intersection(lhs.begin(), lhs.end(),
                           rhs.begin(), rhs.end(), std::inserter(ans, ans.begin()));
 
@@ -72,30 +76,44 @@ std::set<int> invertedIndex::queryNot(std::set<int> &word) {
     return ans;
 }
 
-void invertedIndex::query(std::string &str) {
+std::vector<uint32_t > invertedIndex::fromCompressToNormal(std::vector<uint32_t> &vec) {
+    std::vector<uint32_t > ans;
+    for (auto selector : vec) {
+        int32_t typeSelector = selector & SELECTOR_MASK;
+        uint32_t shift = selectors[typeSelector].nbits;
+        uint32_t element;
+        int32_t countOfElements = selectors[typeSelector].nitems;
+        selector = selector >> SELECTOR_BITS;
+        for (int i = 0; i < countOfElements; ++i) {
+            element = ( selector & binInDec[typeSelector].decItem );
+            if(element) {
+                ans.push_back(element);
+            }
+            selector = selector >> shift;
+        }
+    }
+    return ans;
+}
 
-    std::set<int> ans;
-    std::set<int>::iterator it;
+
+void invertedIndex::query(std::string &str) {
     std::vector<std::string> words = spiltStringBySpaceInVector(str);
 
+    std::vector<uint32_t >::iterator it;
+    std::vector<uint32_t > ans = fromCompressToNormal(compressDict[words[0]]);
 
-    if (words.size() == 1) {
-        ans = dict[words[0]];
-    } else if (words[1] == "&") {
-        ans = queryIntersection(dict[words[0]], dict[words[2]]);
-    } else if (words[1] == "|") {
-        ans = queryUnion(dict[words[0]], dict[words[2]]);
-    } else if (words[0] == "~") {
-        ans = queryNot(dict[words[1]]);
-    }
-    else {
-        std::cout << "wrong query" << std::endl;
-        return;
+    for(int i = 1; i < words.size(); ++i) {
+        std::vector<uint32_t > tmpVector = fromCompressToNormal(compressDict[words[i]]);
+        ans = queryIntersection(ans, tmpVector);
     }
 
-        std::cout << "Match in text: (" << (ans.size()) << " matches):\n";
-    for (it = ans.begin(); it != ans.end(); ++it)
-        std::cout << ' ' << *it << "\n";
+
+    long long i = 0, sum = 0;
+    for (it = ans.begin(); it != ans.end(); ++it, ++i) {
+        sum += ((*it) * i) ;
+    }
+
+    std::cout << ans.size() << " " << sum % (1000000000 + 7);
     std::cout << '\n';
 
 
