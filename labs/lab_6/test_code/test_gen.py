@@ -9,6 +9,10 @@ def get_random_num():
     return ''.join(choice(string.digits) for _ in range(randint(1, 100)))
 
 
+def get_num_pow_num():
+    return ''.join(choice(string.digits) for _ in range(randint(1, 1)))
+
+
 # <count of tests> <count of nums in test>
 
 
@@ -21,22 +25,64 @@ if __name__ == "__main__":
         with open("{0}.t".format(test_file_name), 'w') as output_file, open("{0}.a".format(test_file_name),
                                                                             'w') as answer_file:
             for _ in range(numsInTest):
-                op = choice('+-*')
-                ttext1, ttext2 = get_random_num(), get_random_num()
+                op = choice('^')
 
-                num1 = int(ttext1)
-                num2 = int(ttext2)
-                output_file.write("{0}\n".format(ttext1.lstrip()))
-                output_file.write("{0}\n".format(ttext2.lstrip()))
-                if op == '+':
-                    output_file.write("+\n")
-                    answer_file.write("{0}\n".format(num1 + num2))
-                elif op == '-':
-                    output_file.write("-\n")
-                    if num1 >= num2:
-                        answer_file.write("{0}\n".format(num1 - num2))
-                    else:
+                ttext1 = get_random_num()
+                if op == '^':
+                    ttext2 = get_num_pow_num()
+                    num1 = int(ttext1)
+                    num2 = int(ttext2)
+                    output_file.write("{0}\n".format(ttext1.lstrip()))
+                    output_file.write("{0}\n".format(ttext2.lstrip()))
+                    output_file.write("^\n")
+                    if num2 == 0 and num1 == 0:
                         answer_file.write("Error\n")
-                elif op == '*':
-                    output_file.write("*\n")
-                    answer_file.write("{0}\n".format(num1 * num2))
+                    else:
+                        answer_file.write("{0}\n".format(num1 ** num2))
+                else:
+
+                    ttext2 = get_random_num()
+                    num1 = int(ttext1)
+                    num2 = int(ttext2)
+                    output_file.write("{0}\n".format(ttext1.lstrip()))
+                    output_file.write("{0}\n".format(ttext2.lstrip()))
+                    if op == '+':
+                        output_file.write("+\n")
+                        answer_file.write("{0}\n".format(num1 + num2))
+                    elif op == '-':
+                        output_file.write("-\n")
+                        if num1 >= num2:
+                            answer_file.write("{0}\n".format(num1 - num2))
+                        else:
+                            answer_file.write("Error\n")
+                    elif op == '*':
+                        output_file.write("*\n")
+                        answer_file.write("{0}\n".format(num1 * num2))
+
+                    elif op == '=':
+                        output_file.write("=\n")
+                        if num1 == num2:
+                            answer_file.write("true\n")
+                        else:
+                            answer_file.write("false\n")
+
+                    elif op == '>':
+                        output_file.write(">\n")
+                        if num1 > num2:
+                            answer_file.write("true\n")
+                        else:
+                            answer_file.write("false\n")
+                    elif op == '<':
+                        output_file.write("<\n")
+                        if num1 < num2:
+                            answer_file.write("true\n")
+                        else:
+                            answer_file.write("false\n")
+                    elif op == '/':
+                        output_file.write("/\n")
+                        if num2 == 0:
+                            answer_file.write("Error\n")
+                        else:
+                            answer_file.write("{0}\n".format(num1 // num2))
+
+

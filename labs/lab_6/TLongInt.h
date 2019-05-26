@@ -13,19 +13,52 @@ class TLongInt {
 public:
 
     TLongInt(std::string &strNum);
+
     TLongInt(size_t size);
+
+
+    TLongInt(size_t size, int num);
+
     TLongInt();
 
     void operator+=(TLongInt &rhs);
-    bool operator-=(TLongInt &rhs);
+    void operator+=(TLongInt &&rhs);
+
+    void operator-=(TLongInt &rhs);
+    void operator-=(TLongInt &&rhs);
+
+    bool operator<(TLongInt &&rhs);
+    bool operator<=(TLongInt &&rhs);
+    bool operator>(TLongInt &&rhs);
+    bool operator>=(TLongInt &&rhs);
+    bool operator!=(TLongInt &&rhs);
+    bool operator==(TLongInt &&rhs);
+
+    bool operator<(TLongInt &rhs);
+    bool operator<=(TLongInt &rhs);
+    bool operator>(TLongInt &rhs);
+    bool operator>=(TLongInt &rhs);
+    bool operator!=(TLongInt &rhs);
+    bool operator==(TLongInt &rhs);
+
+    TLongInt operator+(TLongInt &rhs);
+    TLongInt operator+(TLongInt &&rhs);
+
+    TLongInt operator-(TLongInt &rhs);
+    TLongInt operator-(TLongInt &&rhs);
+
     TLongInt operator*(TLongInt &rhs);
+    TLongInt operator*(TLongInt &&rhs);
+
     TLongInt operator/(TLongInt &rhs);
 
-    size_t Size();
+    TLongInt operator^(int num);
+
+    size_t Size() const;
 
 
-    friend std::ostream& operator<<(std::ostream &stream, TLongInt &number);
-    friend std::ostream& operator<<(std::ostream &stream, TLongInt &&number);
+    friend std::ostream &operator<<(std::ostream &stream, TLongInt &number);
+    friend std::ostream &operator<<(std::ostream &stream, TLongInt &&number);
 
     static const int BASE = 1000000000;
     static const int BASE_SIZE = 9;
