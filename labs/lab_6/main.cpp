@@ -1,10 +1,5 @@
-
-
 #include <iostream>
 #include "TLongInt.h"
-
-
-using namespace std;
 
 int main() {
 
@@ -65,9 +60,6 @@ int main() {
                 std::cout << "Error" << std::endl;
                 break;
         }
-
-
     }
-
     return 0;
 }
