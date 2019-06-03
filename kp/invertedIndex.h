@@ -30,7 +30,7 @@ public:
 
     invertedIndex(std::istream &in, uint32_t &n);
 
-    void readRow(uint32_t numOfText);
+    void readRow(uint32_t &numOfText, std::string &str);
 
     void query(std::string &str);
 

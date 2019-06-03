@@ -47,21 +47,6 @@ static const struct {
         {1,  28, 0},
 };
 
-static const struct {
-    uint32_t binItem;
-    uint32_t decItem;
-} binInDec[NSELECTORS] = {
-        {1,  1},
-        {2,  3},
-        {3,  7},
-        {4,  15},
-        {5,  31},
-        {7,  127},
-        {9,  511},
-        {14, 16383},
-        {28, 268435455},
-};
-
 
 void simple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t > &encodeArray);
 

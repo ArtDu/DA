@@ -7,9 +7,9 @@
 #include "simple9.h"
 
 void Enc::Push(uint32_t &numOfText) {
-    if(lastNum != 0) {
-        if (lastNum != numOfText) {
-            delay.push_back(numOfText - lastNum);
+    if(lastNum != 0) { // not empty
+        if (lastNum != numOfText) { // no repeat
+            delay.push_back(numOfText - lastNum); // push delta
             lastNum = numOfText;
         }
         else {
@@ -48,34 +48,21 @@ std::vector<std::string> splitStringBySpaceInVector(std::string &str) {
 
 invertedIndex::invertedIndex(std::istream &in, uint32_t &n) {
     getchar(); //\n
+    std::string str;
     for (uint32_t numOfText = 1; numOfText <= n; ++numOfText) {
-        readRow(numOfText);
+        getline(std::cin, str);
+        readRow(numOfText, str);
     }
 }
 
-void invertedIndex::readRow(uint32_t numOfText) {
+void invertedIndex::readRow(uint32_t &numOfText, std::string& str) {
 
-    std::string str;
-    char c;
-    while(true) {
-        c = (char)getchar();
-        if (c == ' ') {
-            words[str].Push(numOfText);
-            str.clear();
-        }
-        else if (c == '\n') {
-            words[str].Push(numOfText);
-            break;
-        }
-        else {
-            str += c;
-        }
+    std::istringstream iss(str);
+    for (std::string s; iss >> s;) {
+
+        words[s].Push(numOfText);
+
     }
-
-
-
-
-
 }
 
 
@@ -106,6 +93,6 @@ void invertedIndex::query(std::string &str) {
         sum = (sum + i * (*it)) % 1000000007;
     }
 
-    printf("%lu %lld\n", ans.size(), sum);
+    std::cout << ans.size() << " " << sum << std::endl;
 
 }
