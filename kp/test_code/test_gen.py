@@ -19,7 +19,7 @@ if __name__ == "__main__":
         # text
         for i in range(n):
             text = ''
-            for x in range(100):
+            for x in range(10):  # count of nums in row
                 word = get_random_text_word()
                 if word in iv.keys():
                     iv[word].add(i+1)
@@ -33,10 +33,10 @@ if __name__ == "__main__":
 
         # queries
         with open("{0}.a".format(test_file_name), 'w') as answer_file:
-            for i in range(m):  # kolvo strok v file
+            for i in range(m):  # count of rows
                 text = ''
                 ans = set()
-                for x in range(randint(1,6)):  # kolvo chisel v str
+                for x in range(randint(1,6)):  # count of nums in row
                     key = get_random_text_word()
                     if x == 0:
                         ans = iv[key]

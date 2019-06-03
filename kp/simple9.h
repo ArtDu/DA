@@ -6,7 +6,6 @@
 #define KP_SIMPLE9_H
 
 
-
 #include <iostream>
 #include <vector>
 
@@ -17,7 +16,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <limits.h>
-#include <set>
+
 
 
 #define UINT32_BITS (sizeof(uint32_t) * CHAR_BIT) //32
@@ -52,7 +51,7 @@ static const struct {
     uint32_t binItem;
     uint32_t decItem;
 } binInDec[NSELECTORS] = {
-        {1, 1},
+        {1,  1},
         {2,  3},
         {3,  7},
         {4,  15},
@@ -64,10 +63,11 @@ static const struct {
 };
 
 
-std::vector<uint32_t > simple9_encode(std::set<int32_t> &array);
-void print_selector(uint32_t& selector);
+void simple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t > &encodeArray);
 
+std::vector<uint32_t> simple9_decode(std::vector<uint32_t> &vec);
 
+void print_selector(uint32_t &selector);
 
 
 #endif //KP_SIMPLE9_H

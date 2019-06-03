@@ -4,8 +4,6 @@
 
 #include "simple9.h"
 
-
-
 void print_selector(uint32_t& selector) {
     int32_t typeSelector = selector & SELECTOR_MASK;
     std::cout << typeSelector << " ";
@@ -19,13 +17,7 @@ void print_selector(uint32_t& selector) {
     std::cout << std::endl;
 }
 
-std::vector<uint32_t > simple9_encode(std::set<int32_t> &array) {
-
-    std::vector<uint32_t > ans;
-
-    if (array.empty()) {
-        return ans;
-    }
+void simple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t> &encodeArray) {
 
     uint32_t index;
     uint32_t selector;
@@ -50,7 +42,7 @@ std::vector<uint32_t > simple9_encode(std::set<int32_t> &array) {
             for (i = index, iCurNum = curNum; i < arraySize; i++, ++iCurNum) {
 
                 if (*iCurNum > MAX_VALUE) {
-                    return ans;
+                    return;
                 }
 
                 if (nitems == selectors[selector].nitems) // selector is full
@@ -73,7 +65,7 @@ std::vector<uint32_t > simple9_encode(std::set<int32_t> &array) {
             if (nitems == selectors[selector].nitems || index + nitems == arraySize) {
 
                 //print_selector(data);
-                ans.push_back(data);
+                encodeArray.push_back(data);
 
                 index += nitems;
                 curNum = iCurNum;
@@ -84,6 +76,31 @@ std::vector<uint32_t > simple9_encode(std::set<int32_t> &array) {
         } /* End for selector ... */
 
     } /* End while index < n */
+}
+std::vector<uint32_t > simple9_decode(std::vector<uint32_t >& vec){
+    std::vector<uint32_t> ans;
+    uint32_t lastElement = 0;
+    for (auto selector : vec) {
+        int32_t typeSelector = selector & SELECTOR_MASK;
+        uint32_t shift = selectors[typeSelector].nbits;
+        int32_t countOfElements = selectors[typeSelector].nitems;
+        selector = selector >> SELECTOR_BITS;
+        uint32_t element;
 
+        for (int i = 0; i < countOfElements; ++i) {
+            element = (selector & binInDec[typeSelector].decItem);
+            if (element) {
+                if(lastElement != 0) {
+                    lastElement += element;
+                    ans.push_back(lastElement);
+                }
+                else {
+                    lastElement = element;
+                    ans.push_back(element);
+                }
+            }
+            selector = selector >> shift;
+        }
+    }
     return ans;
 }

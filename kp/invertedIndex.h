@@ -4,29 +4,41 @@
 
 #ifndef KP_INVERTEDINDEX_H
 #define KP_INVERTEDINDEX_H
+
 #include <iostream>
-#include <map>
-#include <set>
+#include <unordered_map>
+
 #include <string>
 #include <vector>
 #include <sstream>
+
+
+class Enc{
+public:
+    Enc() = default;
+    void Push(uint32_t &numOfText);
+    std::vector<uint32_t > Decode();
+private:
+    std::vector<uint32_t > encoded;
+    std::vector<uint32_t > delay;
+    uint32_t lastNum = 0;
+};
 
 class invertedIndex {
 public:
 
 
+    invertedIndex(std::istream &in, uint32_t &n);
+
+    void readRow(uint32_t numOfText);
+
     void query(std::string &str);
-    std::vector<uint32_t > queryIntersection( std::vector<uint32_t > &lhs,  std::vector<uint32_t > &rhs);
-    std::set<int> queryUnion(std::set<int> &lhs, std::set<int> &rhs);
-    std::set<int> queryNot(std::set<int> &word);
-    invertedIndex(std::istream& in, int n);
-    void spiltAndUpdateDict(int row, std::string &str, std::map<std::string, std::set<int>> &dict);
-    void compress();
-    std::vector<uint32_t > fromCompressToNormal(std::vector<uint32_t > &vec);
+
+    std::vector<uint32_t> queryIntersection(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs);
+
 private:
-    std::map<std::string, std::set<int>> dict;
-    std::map<std::string, std::vector<uint32_t >> compressDict;
-    std::set<int> allRows;
+    std::unordered_map<std::string, Enc> words;
+
 
 };
 
