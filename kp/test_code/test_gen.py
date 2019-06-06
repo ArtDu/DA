@@ -3,7 +3,7 @@
 from random import choice, randint
 
 def get_random_text_word():
-    return ''.join(choice('abcd') for _ in range(randint(1, 1)))
+    return ''.join(choice('abcdefgh') for _ in range(randint(1, 1)))
 
 
 if __name__ == "__main__":
@@ -36,7 +36,7 @@ if __name__ == "__main__":
             for i in range(m):  # count of rows
                 text = ''
                 ans = set()
-                for x in range(randint(1,6)):  # count of nums in row
+                for x in range(randint(1, 6)):  # count of nums in row
                     key = get_random_text_word()
                     if x == 0:
                         ans = iv[key]
@@ -45,6 +45,7 @@ if __name__ == "__main__":
                     text = text + ' ' + key
 
                 sum = 0
+                ans = sorted(ans)
                 for ind, val in enumerate(ans):
                     sum = (sum + ind * val) % (10**9 + 7)
                 answer_file.write("{0} {1}\n".format(len(ans), sum))

@@ -19,15 +19,9 @@
 
 
 
-#define UINT32_BITS (sizeof(uint32_t) * CHAR_BIT) //32
-
 #define SELECTOR_MASK 0x0000000F //15
 
 #define SELECTOR_BITS 4
-
-#define CODE_BITS (UINT32_BITS - SELECTOR_BITS) //28
-
-#define MAX_VALUE ((1UL << CODE_BITS) - 1) //28 bits 11...11
 
 #define NSELECTORS 9
 
@@ -51,8 +45,6 @@ static const struct {
 void simple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t > &encodeArray);
 
 std::vector<uint32_t> simple9_decode(std::vector<uint32_t> &vec);
-
-void print_selector(uint32_t &selector);
 
 
 #endif //KP_SIMPLE9_H

@@ -17,8 +17,8 @@ class Enc{
 public:
     Enc() = default;
     void Push(uint32_t &numOfText);
+    void PushDelay();
     std::vector<uint32_t > Decode();
-private:
     std::vector<uint32_t > encoded;
     std::vector<uint32_t > delay;
     uint32_t lastNum = 0;
@@ -34,6 +34,7 @@ public:
 
     void query(std::string &str);
 
+    // intersection between normal and encoded vector
     std::vector<uint32_t> queryIntersection(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs);
 
 private:

@@ -36,6 +36,13 @@ std::vector<uint32_t > Enc::Decode() {
     return simple9_decode(encoded);
 }
 
+void Enc::PushDelay() {
+    if (!delay.empty()) {
+        simple9_encode(delay,encoded);
+        delay.clear();
+    }
+}
+
 
 std::vector<std::string> splitStringBySpaceInVector(std::string &str) {
     std::vector<std::string> vec;
@@ -53,6 +60,9 @@ invertedIndex::invertedIndex(std::istream &in, uint32_t &n) {
         getline(std::cin, str);
         readRow(numOfText, str);
     }
+    for (auto &i : words) {
+        i.second.PushDelay();
+    }
 }
 
 void invertedIndex::readRow(uint32_t &numOfText, std::string& str) {
@@ -69,8 +79,64 @@ void invertedIndex::readRow(uint32_t &numOfText, std::string& str) {
 std::vector<uint32_t> invertedIndex::queryIntersection(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs) {
 
     std::vector<uint32_t> ans;
-    std::set_intersection(lhs.begin(), lhs.end(),
-                          rhs.begin(), rhs.end(), std::back_inserter(ans));
+
+    int i = 0; // index in not decoded vector
+    int j = 0; // index in encoded vector
+    int k = 0; // index in selector
+
+    uint32_t lastElement = 0;
+    uint32_t element;
+    while ( i < lhs.size() && j < rhs.size()) {
+        uint32_t selector = rhs[j];
+
+        uint32_t typeSelector = selector & SELECTOR_MASK;
+
+        uint32_t  countOfElements = selectors[typeSelector].nitems; // count of elements in one selector
+
+        uint32_t shift = selectors[typeSelector].nbits;
+
+        uint32_t mask = (1u << selectors[typeSelector].nbits) - 1;
+
+        selector = selector >> SELECTOR_BITS; // skip control bits
+
+        k = 0;
+        element = (selector & mask);
+        if (lastElement != 0) {
+            lastElement += element;
+        } else {
+            lastElement = element;
+        }
+        while ( k < countOfElements && i < lhs.size() ) {
+
+            if (element) {
+
+                if (lastElement == lhs[i]) {
+                    ans.push_back(lastElement);
+                    i++;
+                    k++;
+                    selector = selector >> shift;
+                    element = (selector & mask);
+                    lastElement += element;
+                }
+                else if (lhs[i] > lastElement) {
+                    k++;
+                    selector = selector >> shift;
+                    element = (selector & mask);
+                    lastElement += element;
+                }
+                else {
+                    i++;
+                }
+
+            }
+            else {
+                k++;
+                selector = selector >> shift;
+            }
+        }
+        j++;
+
+    }
 
     return ans;
 }
@@ -83,10 +149,8 @@ void invertedIndex::query(std::string &str) {
     std::vector<uint32_t> ans = words[QueryWords[0]].Decode();
 
     for (int i = 1; i < QueryWords.size(); ++i) {
-        std::vector<uint32_t> tmpVector = words[QueryWords[i]].Decode();
-        ans = queryIntersection(ans, tmpVector);
+        ans = queryIntersection(ans, words[QueryWords[i]].encoded);
     }
-
 
     long long i = 0, sum = 0;
     for (it = ans.begin(); it != ans.end(); ++it, ++i) {
