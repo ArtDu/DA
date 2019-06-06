@@ -25,7 +25,7 @@ if __name__ == "__main__":
         with open("{0}.t".format(test_file_name), 'w') as output_file, open("{0}.a".format(test_file_name),
                                                                             'w') as answer_file:
             for _ in range(numsInTest):
-                op = choice('^')
+                op = choice('*+-/')
 
                 ttext1 = get_random_num()
                 if op == '^':
