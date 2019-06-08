@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++11 -g -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm
+FLAGS = -std=c++11 -O2 -g -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm
 SOURCES = main.cpp simple9.cpp invertedIndex.cpp
 EXECUTABLE = main
 all: build
