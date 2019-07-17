@@ -1,6 +1,3 @@
-//
-// Created by art on 03.05.19.
-//
 
 #ifndef KP_INVERTEDINDEX_H
 #define KP_INVERTEDINDEX_H
@@ -10,7 +7,7 @@
 class TInvertedIndex {
 public:
 
-    TInvertedIndex() = default;
+    TInvertedIndex();
 
     void Read(std::wifstream &in);
     void ReadArticle(std::wifstream &in, uint32_t &numOfArticle);
@@ -26,12 +23,12 @@ public:
 
     int Priority(wchar_t &op);
 
-    std::vector<uint32_t> Evaluate(std::vector<uint32_t> &val1, wchar_t &op, std::vector<uint32_t> &val2);
-    std::vector<uint32_t> Evaluate(wchar_t &op, std::vector<uint32_t> &val1);
+    void Evaluate(std::vector<uint32_t> &val1, wchar_t &op, std::vector<uint32_t> &val2, std::vector<uint32_t> &result);
+    void Evaluate(wchar_t &op, std::vector<uint32_t> &val1, std::vector<uint32_t> &result);
 
-    std::vector<uint32_t> QueryIntersection(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs);
-    std::vector<uint32_t> QueryUnion(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs);
-    std::vector<uint32_t> QueryDifference(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs);
+    void QueryIntersection(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs, std::vector<uint32_t> &result);
+    void QueryUnion(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs, std::vector<uint32_t> &result);
+    void QueryDifference(std::vector<uint32_t> &lhs, std::vector<uint32_t> &rhs, std::vector<uint32_t> &result);
 
     bool full_output;
 private:

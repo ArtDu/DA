@@ -1,6 +1,3 @@
-//
-// Created by art on 20.06.19.
-//
 
 #ifndef KP_ENC_H
 #define KP_ENC_H
@@ -16,7 +13,7 @@ public:
     //encode all delays nums
     void PushDelay();
 
-    std::vector<uint32_t> Decode();
+    void Decode(std::vector<uint32_t> &ans);
 
     void Save(std::wofstream &out);
     void Load(std::wifstream &in);

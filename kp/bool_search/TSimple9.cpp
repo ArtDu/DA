@@ -1,6 +1,3 @@
-//
-// Created by art on 20.05.19.
-//
 
 #include "TSimple9.h"
 
@@ -57,9 +54,8 @@ void TSimple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t> &encode
     } /* End while index < n */
 }
 
-std::vector<uint32_t> TSimple9_decode(std::vector<uint32_t> &vec) {
+void TSimple9_decode(std::vector<uint32_t> &vec, std::vector<uint32_t > &ans) {
 
-    std::vector<uint32_t> ans;
     uint32_t lastElement = 0;
     uint32_t element;
 
@@ -78,6 +74,7 @@ std::vector<uint32_t> TSimple9_decode(std::vector<uint32_t> &vec) {
             element = (selector & mask);
             if (element) {
                 if (lastElement != 0) {
+                    // remove deltas
                     lastElement += element;
                     ans.push_back(lastElement);
                 } else {
@@ -88,5 +85,5 @@ std::vector<uint32_t> TSimple9_decode(std::vector<uint32_t> &vec) {
             selector = selector >> shift;
         }
     }
-    return ans;
+
 }

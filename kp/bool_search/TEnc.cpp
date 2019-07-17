@@ -1,6 +1,3 @@
-//
-// Created by art on 20.06.19.
-//
 
 #include <stdint-gcc.h>
 #include "TEnc.h"
@@ -33,17 +30,13 @@ void TEnc::PushDelay() {
     }
 }
 
-std::vector<uint32_t> TEnc::Decode() {
+void TEnc::Decode(std::vector<uint32_t> &ans) {
     if (!delay.empty()) {
         TSimple9_encode(delay, encoded);
         delay.clear();
     }
-    std::vector<uint32_t> tmp = TSimple9_decode(encoded);
-    //delete deltas
-    for (int i = 1; i < tmp.size(); ++i) {
-        tmp[i] += tmp[i-1];
-    }
-    return tmp;
+    TSimple9_decode(encoded, ans);
+
 }
 
 void TEnc::Save(std::wofstream &out) {
@@ -55,7 +48,7 @@ void TEnc::Save(std::wofstream &out) {
 }
 
 void TEnc::Load(std::wifstream &in) {
-    int32_t num;
+    uint32_t num;
     while (true) {
         in >> num;
         if(num == 0)

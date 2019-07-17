@@ -1,6 +1,3 @@
-//
-// Created by art on 20.05.19.
-//
 
 #ifndef KP_SIMPLE9_H
 #define KP_SIMPLE9_H
@@ -51,7 +48,7 @@ static const struct {
 
 void TSimple9_encode(std::vector<uint32_t> &array, std::vector<uint32_t> &encodeArray);
 
-std::vector<uint32_t> TSimple9_decode(std::vector<uint32_t> &vec);
+void TSimple9_decode(std::vector<uint32_t> &vec, std::vector<uint32_t > &ans);
 
 
 #endif //KP_SIMPLE9_H
