@@ -1,9 +1,34 @@
+### fractional knapsack problem
+
 Дано: N, W, C
-##### С повторениями
+
+    sort weight-val-cost by cost(unit cost) = val/weight
+    and take maximum by unit cost
     
-    pass
+    if W - curW >= 0:
+        W -= i.weight
+        ans += i.value
+    else:
+        ans += W * i.cost
+        break
+
+
+
+### 0-1 knapsack problem
+
+Дано: N, W, C
+
+##### unbound 0-1 knapsack problem
     
-##### Без повторении
+    dp[i] = 0
+    dp[i] = max(dp[i], dp[i-wt[j]] + val[j] 
+                       where j varies from 0 
+                       to n-1 such that:
+                       wt[j] <= i
+    
+    result = d[W]
+    
+##### normal 0-1 knapsack problem
     
     Берем и уменьшаем вес или не берем
     dp(i, w)
