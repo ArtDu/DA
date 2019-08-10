@@ -16,8 +16,13 @@ public:
 };
 
 bool cmp(sectionItem &lhs, sectionItem &rhs) {
-    return (lhs.finish < rhs.finish);
+    return (lhs.start < rhs.start);
 }
+
+bool cmpIndex(sectionItem &lhs, sectionItem &rhs) {
+    return (lhs.index < rhs.index);
+}
+
 
 
 int main() {
@@ -88,10 +93,12 @@ int main() {
         lastCorrectSection = -1;
     }
 
+
     if (m <= ans.back().finish) {
         std::cout << ans.size() << std::endl;
+        std::sort(ans.begin(), ans.end(), cmpIndex);
         for (auto j : ans) {
-            std::cout << pointsNonSort[j.index].start << " " << pointsNonSort[j.index].finish << std::endl;
+            std::cout << j.start << " " << j.finish << std::endl;
         }
     } else {
         std::cout << 0 << std::endl;
