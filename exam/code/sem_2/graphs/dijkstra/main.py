@@ -43,25 +43,23 @@ def dijkstra(edges, V, s):
         for i in edges[v]:
             relax(spt_set, dist, v, i.to, i.weight)
 
-    print_dist(dist, V)
+    # print_dist(dist, V)
+    print(dist[n])
 
 
 if __name__ == "__main__":
 
-    # t = int(input())
-    # for _ in range(t):
-    #     edges = defaultdict(list)
-    #     n = int(input())
-    #     for i in range(1, n + 1):
-    #         j = i + 1
-    #         edges[j].append(Edge(i, 1))
-    #         j = 3 * i
-    #         if j <= n:
-    #             edges[j].append(Edge(i, 1))
-
-
-
-
+    t = int(input())
+    for _ in range(t):
+        edges = defaultdict(list)
+        n = int(input())
+        for i in range(1, n):
+            j = i + 1
+            edges[i].append(Edge(j, 1))
+            j = 3 * i
+            if j <= n:
+                edges[i].append(Edge(j, 1))
+        dijkstra(edges, n + 1, 1)
 
     # N, M, S = list(map(int, input().split()))
     # edges = defaultdict(list)
