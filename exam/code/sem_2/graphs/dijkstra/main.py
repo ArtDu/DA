@@ -1,5 +1,6 @@
-from heapq import heappush, heappop
 from collections import defaultdict
+
+maxint = 2 ** 32
 
 
 class Edge:
@@ -8,35 +9,65 @@ class Edge:
         self.weight = weight
 
 
-class Vertex:
+def relax(spt_set, dist, src, to, weight):
+    if dist[to] > dist[src] + weight and spt_set[to] == False:
+        dist[to] = dist[src] + weight
 
-    def __init__(self, num):
-        self.d = 2 ** 32
-        self.num = num
 
-    def __lt__(self, other):
-        return self.d < other.d
+def find_min(spt_set, dist, V):
+    m = maxint
+    m_index = -1
+    for v in range(V):
+        if spt_set[v] == False and dist[v] < m:
+            m = dist[v]
+            m_index = v
+    return m_index
 
-def relax(dist, src, to, weight):
+
+def print_dist(dist, V):
+    for v in range(V):
+        print(dist[v], end=" ")
+    print()
+
 
 def dijkstra(edges, V, s):
-    pq = []
-    for i in range(V):
-        tmp = Vertex(i)
-        if i == s:
-            tmp.d = 0
-        heappush(pq, tmp)
+    dist = [maxint for _ in range(V)]
+    dist[s] = 0
+    spt_set = [False for _ in range(V)]
 
-    while len(pq) != 0:
-        vertex = heappop(pq)
-        for adjacencyVertex in edges[vertex]:
+    for _ in range(V):
+        v = find_min(spt_set, dist, V)
+
+        spt_set[v] = True
+
+        for i in edges[v]:
+            relax(spt_set, dist, v, i.to, i.weight)
+
+    print_dist(dist, V)
 
 
 if __name__ == "__main__":
-    N, M, S = list(map(int, input().split()))
-    edges = defaultdict(list)
-    for _ in range(M):
-        src, to, weight = list(map(int, input().split()))
-        edges[src].append(Edge(to, weight))
 
-    dijkstra(edges, N, S)
+    # t = int(input())
+    # for _ in range(t):
+    #     edges = defaultdict(list)
+    #     n = int(input())
+    #     for i in range(1, n + 1):
+    #         j = i + 1
+    #         edges[j].append(Edge(i, 1))
+    #         j = 3 * i
+    #         if j <= n:
+    #             edges[j].append(Edge(i, 1))
+
+
+
+
+
+    # N, M, S = list(map(int, input().split()))
+    # edges = defaultdict(list)
+    # for _ in range(M):
+    #     src, to, weight = list(map(int, input().split()))
+    #     edges[src].append(Edge(to, weight))
+    #     edges[to].append(Edge(src, weight))
+    #
+    # dijkstra(edges, N, S)
