@@ -1,4 +1,4 @@
-class Edge:
+class Edge_b_f:
     def __init__(self, src, to, weight):
         self.src = src
         self.to = to
@@ -41,6 +41,6 @@ if __name__ == "__main__":
         tmp_arr = list(map(int, input().split()))
         adjacency_list = []
         for i in range(0, len(tmp_arr), 3):
-            adjacency_list.append(Edge(tmp_arr[i], tmp_arr[i + 1], tmp_arr[i + 2]))
+            adjacency_list.append(Edge_b_f(tmp_arr[i], tmp_arr[i + 1], tmp_arr[i + 2]))
 
         print(0) if bellman_ford(v, adjacency_list) else print(1)

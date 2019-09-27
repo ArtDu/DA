@@ -33,7 +33,7 @@ def print_dist(dist, V):
 def dijkstra(edges, V, s):
     dist = [maxint for _ in range(V)]
     dist[s] = 0
-    spt_set = [False for _ in range(V)]
+    spt_set = [False for _ in range(V)]  # shortest path tree set
 
     for _ in range(V):
         v = find_min(spt_set, dist, V)

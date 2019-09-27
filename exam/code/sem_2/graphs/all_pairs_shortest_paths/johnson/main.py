@@ -1,11 +1,42 @@
-# A Python program for Dijkstra's shortest
-# path algorithm for adjacency
-# list representation of graph
-
 from collections import defaultdict
-import sys
 
-maxint = 2009000999
+maxint = 2 ** 31
+
+
+class Edge_b_f:
+    def __init__(self, src, to, weight):
+        self.src = src
+        self.to = to
+        self.weight = weight
+
+
+def relax(dist, u, v, w):
+    if dist[v] > dist[u] + w:
+        dist[v] = dist[u] + w
+
+
+def bellman_ford(v_nums, edges):
+    # Step 1: Initialize distances from src to all other vertices
+    # as INFINITE
+    dist = [2 ** 32] * (v_nums + 1)
+    dist[0] = 0
+
+    # Step 2: Relax all edges |V| - 1 times. A simple shortest
+    # path from src to any other vertex can have at-most |V| - 1
+    # edges
+    for _ in range(v_nums - 1):
+        for edge in edges:
+            relax(dist, edge.src, edge.to, edge.weight)
+
+    # Step 3: check for negative-weight cycles.  The above step
+    # guarantees shortest distances if graph doesn't contain
+    # negative weight cycle.  If we get a shorter path, then there
+    # is a cycle.
+    for i in edges:
+        if dist[i.to] > dist[i.src] + i.weight:
+            return False
+
+    return True  # true - no negative loops
 
 
 class HeapItem:
@@ -114,21 +145,27 @@ def dijkstra(edges, n, s):
                 dist[v] = dist[u] + w
                 min_heap.decrease_key(v, dist[v])
 
-    # print dist
-    for i in dist:
-        print(i, end=" ")
-    print()
+    # dist.pop(s)
+    return dist
 
+
+def johnson(edges, n, s):
+    pass
 
 def main():
-    n, m, s = list(map(int, input().split()))
-    edges = defaultdict(list)
-    for _ in range(m):
-        src, to, weight = list(map(int, input().split()))
-        edges[src].append(Edge(to, weight))
-        edges[to].append(Edge(src, weight))
+    t = int(input())
+    for _ in range(t):
+        n, m = list(map(int, input().split()))
+        edges = defaultdict(list)
+        for _ in range(m):
+            src, to, weight = list(map(int, input().split()))
+            edges[src - 1].append(Edge(to - 1, weight))
+            edges[to - 1].append(Edge(src - 1, weight))
 
-    dijkstra(edges, n, s)
+        dist = johnson(edges, n)
+
+        ans = ' '.join(map(str, dist))
+        print(ans)
 
 
 if __name__ == "__main__":
