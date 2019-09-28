@@ -4,24 +4,30 @@
 #include <algorithm>
 
 
-bool Dfs(std::vector<char> &used, std::vector<int> &matching, std::vector<std::vector<int>> &adjList, int v) {
-    if (used[v]) return false;
+bool Dfs(std::vector<char> &used, std::vector<int> &matching, std::vector<std::set<int>> &adjList, int v) {
+    if (used[v])
+        return false;
     used[v] = true;
+
     for (auto to : adjList[v]) {
         if (matching[to] == -1 || Dfs(used, matching, adjList, matching[to])) {
             matching[to] = v;
             return true;
         }
     }
+
     return false;
 }
 
-void Kuhn(int n, std::vector<std::vector<int>> &adjList) {
+void Kuhn(int n, std::vector<std::set<int>> &adjList, std::vector<char> &part) {
     std::vector<int> matching(n + 1, -1);
     std::vector<char> used;
     for (int v = 1; v <= n; ++v) {
-        used.assign(n + 1, false);
-        Dfs(used, matching, adjList, v);
+        if (part[v] == 0) {
+            used.assign(n + 1, false);
+            Dfs(used, matching, adjList, v);
+        }
+
     }
 
     int u, v;
@@ -30,56 +36,50 @@ void Kuhn(int n, std::vector<std::vector<int>> &adjList) {
         if (matching[i] != -1) {
             u = std::min(matching[i], i);
             v = std::max(matching[i], i);
-            /*printf("%d %d\n", u, v);*/
             ans.insert(std::make_pair(u, v));
         }
     }
 
     std::cout << ans.size() << std::endl;
 
-//    std::sort(ans.begin(), ans.end());
-
-    int last_u = -1;
-    int last_v = -1;
     for (auto i : ans) {
-        /*if(last_u != i.first || last_v != i.second) {
-            std::cout << i.first << " " << i.second << "\n";
-        }
-        last_u = i.first; last_v = i.second;*/
-
         std::cout << i.first << " " << i.second << "\n";
     }
 
 }
-
-/*
-9 8
-1 9
-2 9
-3 8
-2 7
-3 7
-3 6
-4 7
-5 7
- */
-
-
 
 int main() {
 
     int n, m, u, v;
     std::cin >> n >> m;
 
-    std::vector<std::vector<int>> adjList(n + 1);
+    std::vector<std::set<int>> adjList(n + 1);
 
     for (int i = 0; i < m; ++i) {
         std::cin >> u >> v;
-        adjList[u].push_back(v);
-        adjList[v].push_back(u);
+        adjList[u].insert(v);
+        adjList[v].insert(u);
     }
 
-    Kuhn(n, adjList);
+
+    std::vector<char> part(n + 1, -1);
+    std::vector<int> q(n + 1);
+    for (int st = 1; st <= n; ++st)
+        if (part[st] == -1) {
+            int h = 0, t = 0;
+            q[t++] = st;
+            part[st] = 0;
+            while (h < t) {
+                int v = q[h++];
+                for (auto to : adjList[v]) {
+                    if (part[to] == -1)
+                        part[to] = !part[v], q[t++] = to;
+                }
+            }
+        }
+
+
+    Kuhn(n, adjList, part);
 
     return 0;
 }
