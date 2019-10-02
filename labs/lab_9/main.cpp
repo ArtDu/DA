@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <queue>
 #include <algorithm>
 
 
-bool Dfs(std::vector<char> &used, std::vector<int> &matching, std::vector<std::set<int>> &adjList, int v) {
+bool Dfs(std::vector<char> &used, std::vector<int> &matching, const std::vector<std::set<int>> &adjList, int v) {
     if (used[v])
         return false;
     used[v] = true;
@@ -19,7 +20,8 @@ bool Dfs(std::vector<char> &used, std::vector<int> &matching, std::vector<std::s
     return false;
 }
 
-void Kuhn(int n, std::vector<std::set<int>> &adjList, std::vector<char> &part) {
+void Kuhn(const int &n, const std::vector<std::set<int>> &adjList, const std::vector<char> &part) {
+
     std::vector<int> matching(n + 1, -1);
     std::vector<char> used;
     for (int v = 1; v <= n; ++v) {
@@ -48,6 +50,42 @@ void Kuhn(int n, std::vector<std::set<int>> &adjList, std::vector<char> &part) {
 
 }
 
+void Bfs(const std::vector<std::set<int>> &adjList, std::vector<char> &color, const int &src) {
+
+    std::queue<int> q;
+    q.push(src);
+
+    // Assign first color to source
+    color[src] = 0;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (auto v : adjList[u]) {
+            if (color[v] == -1) {
+                color[v] = !color[u];
+                q.push(v);
+            }
+        }
+    }
+}
+
+std::vector<char> DivideToBipartite(const std::vector<std::set<int>> &adjList, const int &n) {
+    // -1  = no color
+    //  0  = first color
+    //  1  = second color
+    std::vector<char> color(n + 1, -1);
+
+    for (int i = 1; i <= n; ++i) {
+        if (color[i] == -1)
+            Bfs(adjList, color, i);
+    }
+
+    return color;
+
+}
+
 int main() {
 
     int n, m, u, v;
@@ -62,24 +100,9 @@ int main() {
     }
 
 
-    std::vector<char> part(n + 1, -1);
-    std::vector<int> q(n + 1);
-    for (int st = 1; st <= n; ++st)
-        if (part[st] == -1) {
-            int h = 0, t = 0;
-            q[t++] = st;
-            part[st] = 0;
-            while (h < t) {
-                int v = q[h++];
-                for (auto to : adjList[v]) {
-                    if (part[to] == -1)
-                        part[to] = !part[v], q[t++] = to;
-                }
-            }
-        }
+    std::vector<char> color = DivideToBipartite(adjList, n);
 
-
-    Kuhn(n, adjList, part);
+    Kuhn(n, adjList, color);
 
     return 0;
 }
