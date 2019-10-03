@@ -1,55 +1,36 @@
 #include <iostream>
 #include <string>
-#include <chrono>
 
-int64_t matrix[10005][10005];
+int64_t matrix[101][101];
 
-int64_t getCountUp(std::string &str) {
+int64_t getCount(std::string &str, int i, int j) {
 
-    for (int i = 0; i < str.size(); ++i) {
-        matrix[i][i] = 1;
-    }
+    if (i == j)
+        return 1;
 
-    for (int i = 0, j = 1; j < str.size(); ++i, ++j) {
-        if (str[i] == str[j])
-            matrix[i][j] = 3;
-        else
-            matrix[i][j] = 2;
-    }
+    if (i > j)
+        return 0;
 
-    for (int l = 2; l < str.size(); ++l) {
-        for (int i = 0, j = l; j < str.size(); ++i, ++j) {
-
-            if (str[i] == str[j]) {
-                matrix[i][j] = matrix[i + 1][j] + matrix[i][j - 1] + 1;
-            } else {
-                matrix[i][j] = matrix[i + 1][j] + matrix[i][j - 1] - matrix[i + 1][j - 1];
-            }
-
+    if(matrix[i][j] == 0) {
+        if (str[i] == str[j]) {
+            matrix[i][j] = getCount(str, i + 1, j) + getCount(str, i, j - 1) + 1;
+        } else {
+            matrix[i][j] = getCount(str, i + 1, j) + getCount(str, i, j - 1) - getCount(str, i + 1, j - 1);
         }
+        return matrix[i][j];
     }
 
-
-    return matrix[0][str.size()-1];
+    return matrix[i][j];
 
 }
 
 
 int main() {
 
-    std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-
     std::string str;
     std::cin >> str;
 
-    std::cout << getCountUp(str) << std::endl;
-
-
-    std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-    std::cout << "From bottom to up: " << std::endl;
-    std::cout << "Time of working ";
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>( end - start ).count();
-    std::cout << " ms." << std::endl;
+    std::cout << getCount(str, 0, str.size() - 1) << std::endl;
 
     return 0;
 }
