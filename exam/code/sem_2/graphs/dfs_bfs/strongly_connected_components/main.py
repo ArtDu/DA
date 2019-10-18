@@ -1,3 +1,9 @@
+# docs:
+# https://www.geeksforgeeks.org/strongly-connected-components/
+# problem:
+# https://practice.geeksforgeeks.org/problems/strongly-connected-components-kosarajus-algo/1
+
+
 from collections import defaultdict
 
 

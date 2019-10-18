@@ -1,3 +1,9 @@
+# docs:
+# https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
+# problem(exist in graph negative cycle?):
+# https://practice.geeksforgeeks.org/problems/negative-weight-cycle/0
+
+
 class Edge_b_f:
     def __init__(self, src, to, weight):
         self.src = src

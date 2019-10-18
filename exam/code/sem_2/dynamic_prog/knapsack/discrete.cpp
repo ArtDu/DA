@@ -1,23 +1,23 @@
 #include <iostream>
 #include <vector>
-#include <string>
 
 using namespace std;
 
 /*
-test nums
+test nums from https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/
 
-3 6
-2 1
-5 4
-4 2
+3 50
+60 10
+100 20
+120 30
 
  */
 
 
 long long
-knapsack(vector<vector<long long>> &mem, vector<long long> &massOfItems, vector<long long> &priceOfItems,
-         long long numberOfItems, long long massOfKnapSack, long long &items_power) {
+knapsack(vector<vector<long long>> &mem, vector<long long> &massOfItems,
+         vector<long long> &priceOfItems,
+         long long numberOfItems, long long massOfKnapSack) {
 
     // ran out of items
     if (numberOfItems == 0) {
@@ -33,36 +33,29 @@ knapsack(vector<vector<long long>> &mem, vector<long long> &massOfItems, vector<
     long long fst;
     long long snd;
 
-    long long fst_items_power = items_power;
-    long long snd_items_power = items_power;
-
     // take an item in knapsack
     if (massOfKnapSack - massOfItems[numberOfItems] >= 0) {
 
         fst = knapsack(mem, massOfItems, priceOfItems, numberOfItems - 1,
-                       massOfKnapSack - massOfItems[numberOfItems], fst_items_power)
+                       massOfKnapSack - massOfItems[numberOfItems])
               + priceOfItems[numberOfItems];
-        fst_items_power++;
+
     } else // we can't take this item
         fst = 0;
 
     // don't take
-    snd = knapsack(mem, massOfItems, priceOfItems, numberOfItems - 1, massOfKnapSack, snd_items_power);
+    snd = knapsack(mem, massOfItems, priceOfItems, numberOfItems - 1, massOfKnapSack);
 
-    if(fst * fst_items_power > snd * snd_items_power) {
-        mem[numberOfItems][massOfKnapSack] = fst * fst_items_power;
-        items_power = fst_items_power;
-    }
-    else {
-        mem[numberOfItems][massOfKnapSack] = snd * snd_items_power;
-        items_power = snd_items_power;
-    }
+    mem[numberOfItems][massOfKnapSack] = max(fst, snd);
+
     return mem[numberOfItems][massOfKnapSack];
 
 }
 
-void recovery(vector<vector<long long>> &mem, vector<long long> &massOfItems, vector<long long> &priceOfItems,
+void recovery(vector<vector<long long>> &mem, vector<long long> &massOfItems,
+              vector<long long> &priceOfItems,
               long long numberOfItems, long long massOfKnapSack) {
+
     if (mem[numberOfItems][massOfKnapSack] == 0) {
         return;
     }
@@ -82,9 +75,8 @@ knapsack(vector<long long> &massOfItems, vector<long long> &priceOfItems, long l
          long long massOfKnapSack) {
 
     vector<vector<long long>> mem(numberOfItems + 1, vector<long long>(massOfKnapSack + 1, -1));
-    long long items_power = 0;
 
-    knapsack(mem, massOfItems, priceOfItems, numberOfItems, massOfKnapSack, items_power);
+    knapsack(mem, massOfItems, priceOfItems, numberOfItems, massOfKnapSack);
 
     cout << mem[numberOfItems][massOfKnapSack] << "\n";
     recovery(mem, massOfItems, priceOfItems, numberOfItems, massOfKnapSack);
@@ -102,8 +94,8 @@ int main() {
     vector<long long> priceOfItems(numberOfItems + 1);
 
     for (int i = 1; i <= numberOfItems; ++i) {
-        cin >> massOfItems[i];
         cin >> priceOfItems[i];
+        cin >> massOfItems[i];
     }
 
     knapsack(massOfItems, priceOfItems, numberOfItems, massOfKnapSack);

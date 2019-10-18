@@ -1,4 +1,18 @@
+# checker:
+# https://practice.geeksforgeeks.org/problems/huffman-encoding/0
+# docs:
+# https://www.geeksforgeeks.org/efficient-huffman-coding-for-sorted-input-greedy-algo-4/
+
 from collections import deque
+
+"""
+for test
+
+1
+abcdef
+5 9 12 13 16 45
+
+"""
 
 
 class HuffmanCodeItem:
@@ -19,6 +33,8 @@ class HuffmanCode:
             self.queue_1.append(HuffmanCodeItem(letters[i], frequencies[i]))
 
         # building huffman tree
+        # we need first condition for first iteration case where we take 2 elements
+        # from q1, merge them and push into q2
         while len(self.queue_1) != 0 or len(self.queue_2) != 1:
             left = self.find_min_and_pop()
             right = self.find_min_and_pop()

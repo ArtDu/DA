@@ -1,3 +1,19 @@
+# checker:
+# https://practice.geeksforgeeks.org/problems/huffman-encoding/0
+# docs:
+# https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
+
+
+"""
+for test
+
+1
+abcdef
+5 9 12 13 16 45
+
+"""
+
+
 from heapq import heappush, heappop
 
 

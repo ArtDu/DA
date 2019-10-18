@@ -1,15 +1,23 @@
-Дано:  
- S1, S2
+from CLRS(Introduction to algorithms)
+
+### Given:  
+ S1, S2 
+ n = size of S1
+ m = size of S2
+
+#### Complexity
+Time Complexity: O(m x n)  
+Auxiliary Space: O(m x n)    
 
 ##### LCS - longest common subsequence
     
     dp[i][j]
     
     Рекурентная формула:
-        dp[i][j] = 0                   , i = 0 or j = 0
-        dp[i][j] = dp[i - 1][j - 1] + 1, s1[i] == s2[j]
-        dp[i][j] = max ( dp[i - 1][j],
-                         dp[i][j - 1] ), s1[i] != s2[j]
+        dp[i][j] = 0                      , i = 0 or j = 0
+        dp[i][j] = dp[i - 1][j - 1] + 1   , s1[i] == s2[j]
+        dp[i][j] = max ( dp[i - 1][j],    , s1[i] != s2[j]
+                         dp[i][j - 1] )   
   
     
     Восстановление:

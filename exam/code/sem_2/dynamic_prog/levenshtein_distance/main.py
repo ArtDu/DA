@@ -1,5 +1,11 @@
+# checker:
+# https://practice.geeksforgeeks.org/problems/edit-distance/0
+# docs:
+# https://www.geeksforgeeks.org/edit-distance-dp-5/
+
+
 def edit_distance(s1, s2, l1, l2):
-    mem = [[0 for x in range(l2 + 1)] for x in range(l1 + 1)]
+    mem = [[0 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
 
     for i in range(l1 + 1):
         for j in range(l2 + 1):

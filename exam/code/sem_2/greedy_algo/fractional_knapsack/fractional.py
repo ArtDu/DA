@@ -1,3 +1,10 @@
+# checker:
+# https://practice.geeksforgeeks.org/problems/fractional-knapsack/0
+# docs:
+# https://www.geeksforgeeks.org/fractional-knapsack-problem/
+#
+
+
 class Item:
     def __init__(self, w, v):
         self.w = w
@@ -17,11 +24,9 @@ def fractional_knapsack_problem(N, W, w, val):
 
     ans = 0
     for i in items:
-        curW = i.w
-        curV = i.val
-        if W - curW >= 0:
-            W -= curW
-            ans += curV
+        if W - i.w >= 0:
+            W -= i.w
+            ans += i.val
         else:
             ans += W * i.cost
             break

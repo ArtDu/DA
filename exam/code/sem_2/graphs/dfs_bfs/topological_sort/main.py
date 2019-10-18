@@ -1,23 +1,28 @@
+# docs:
+# https://www.geeksforgeeks.org/topological-sorting/
+# problem:
+# https://practice.geeksforgeeks.org/problems/topological-sort/1
+
 import collections
 
 
-def topoSortAux(stack, visited, g, v):
+def topological_sort_aux(stack, visited, g, v):
     visited[v] = True
 
     for k in g[v]:
         if not visited[k]:
-            topoSortAux(stack, visited, g, k)
+            topological_sort_aux(stack, visited, g, k)
 
     stack.append(v)
 
 
-def topoSort(n, graph):
+def topological_sort(n, graph):
     visited = [False] * n
     stack = []
 
     for j in range(n):
         if not visited[j]:
-            topoSortAux(stack, visited, graph, j)
+            topological_sort_aux(stack, visited, graph, j)
     return list(reversed(stack))
 
 
@@ -30,7 +35,7 @@ if __name__ == "__main__":
         for i in range(0, e * 2, 2):
             graph[arr[i]].append(arr[i + 1])
 
-        res = topoSort(N, graph)
+        res = topological_sort(N, graph)
         # print res
         valid = True
         for i in range(N):

@@ -4,7 +4,7 @@
 using namespace std;
 
 /*
-test nums
+test nums from CLRS(Introduction to algorithms)
 
 7
 30 35 15 5 10 20 25

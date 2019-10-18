@@ -1,3 +1,9 @@
+# this code to solve the problem:
+# https://practice.geeksforgeeks.org/problems/longest-increasing-subsequence/0
+# docs:
+# https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/
+
+
 def LIS(a):
     d = [0 for _ in range(len(a))]
     maximum = 1

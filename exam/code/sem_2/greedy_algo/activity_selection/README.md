@@ -1,16 +1,33 @@
-##### Задача о процессах
+docs:  
+[https://www.geeksforgeeks.org/activity-selection-problem-greedy-algo-1/]  
+this code to solve problem:  
+[https://practice.geeksforgeeks.org/problems/n-meetings-in-one-room/0]  
 
-Дано:  
-T - nums of test cases
-n - count of nums
-S - start nums
-F - finish nums
+
+##### Activity selection problem (Задача о процессах)
+
+#### Complexity
+dynamic:   
+Time Complexity: O(n^2)  
+
+greedy:
+Time Complexity: O(n * logN)
+
+#### Given:  
+T - nums of test cases  
+n - count of nums  
+S - start nums  
+F - finish nums  
 
 
     Динамическое программирование:
+    
+        Like Longest Increasing Subsequence 
+    
         L[i] = stores maximus of non-conflicting jobs ending at i'th job
-        L[i] = jobs[i] + { max(L[j]) where j < i and jobs[j].end < jobs[i].start }
-             = jobs[i], if there is no such j
+        L[i] = {jobs[i]} Union { max(L[j].size()) where j < i and
+                            jobs[j].end < jobs[i].start }
+             // = jobs[i], if there is no such j
         
         example:
         
@@ -22,16 +39,16 @@ F - finish nums
         
         {1, 4}, {5, 7}, {8, 11}, {12, 14}
         
-        L[0]: {0, 6}
-        L[1]: {1, 4}
-        L[2]: {2, 13}
-        L[3]: {3, 5}
-        L[4]: {3, 8}
-        L[5]: {1, 4} {5, 7}
-        L[6]: {1, 4} {5, 9}
-        L[7]: {1, 4} {6, 10}
-        L[8]: {1, 4} {5, 7} {8, 11}
-        L[9]: {1, 4} {5, 7} {8, 12}
+        L[0]:  {1, 4}
+        L[1]:  {3, 5}
+        L[2]:  {0, 6}
+        L[3]:  {1, 4} {5, 7}
+        L[4]:  {3, 8}
+        L[5]:  {1, 4} {5, 9}
+        L[6]:  {1, 4} {6, 10}
+        L[7]:  {1, 4} {5, 7} {8, 11}
+        L[8]:  {1, 4} {5, 7} {8, 12}
+        L[9]:  {2, 13}
         L[10]: {1, 4} {5, 7} {8, 11} {12, 14}
             
         
@@ -54,7 +71,7 @@ F - finish nums
             L[i].push_back(jobs[i]);
         } 
 
-
+    
     Жадный выбор: выбираем первый процесс am в отсортированных по времени окончания,
      у которого время начала меньше времени окончания Sk
     

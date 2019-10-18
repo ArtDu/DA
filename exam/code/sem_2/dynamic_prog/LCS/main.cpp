@@ -4,7 +4,10 @@
 
 using namespace std;
 
-/*test
+/*
+ * test subsequences from CLRS(Introduction to algorithms)
+ *
+ * program return common string
 
 abcbdab
 bdcaba

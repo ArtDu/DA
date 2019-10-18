@@ -1,3 +1,9 @@
+# docs:
+# https://www.geeksforgeeks.org/activity-selection-problem-greedy-algo-1/
+# this code to solve problem:
+# https://practice.geeksforgeeks.org/problems/n-meetings-in-one-room/0
+
+
 def activity_selector(sf):
     k = 0
     print(sf[k][0], end=" ")

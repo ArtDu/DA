@@ -1,5 +1,12 @@
-Дано:  
- P - размеры матриц
+from CLRS(Introduction to algorithms)
+
+### Given:  
+ P - size of matrix
+
+#### Complexity
+Time Complexity: O(n^3)  
+Auxiliary Space: O(n^2)
+
 
 ##### Matrix chain order
     
@@ -7,14 +14,14 @@
     
     Выбираем k и считаем внутри и перемножаем результат.
     
-    Рекурентная формула:
-        dp[i][j] = 0                                     , i == j 
-        dp[i][j] =   min ( dp[i][k] + dp[k+1][j]
-                                + P[i-1] * P[k] * P[j] ) , i < j
+    Recurrence (Рекурентная формула):
+        dp[i][j] =   0                                 , i == j 
+        dp[i][j] =   min { dp[i][k] + dp[k+1][j]       , i < j
+                           + P[i-1] * P[k] * P[j] } 
                   i <= k < j
   
     
-    Восстановление:
+    Recovery:
         s[i][j] = k
                    
         recovery(s, l, r):

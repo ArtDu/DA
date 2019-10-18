@@ -109,7 +109,7 @@ def dijkstra(edges, n, s):
         for edge in edges[u]:
             v = edge.to
             w = edge.weight
-            if min_heap.in_heap(v) and dist[u] != maxint and dist[v] > dist[u] + w:
+            if min_heap.in_heap(v) and dist[v] > dist[u] + w:
                 dist[v] = dist[u] + w
                 min_heap.decrease_key(v, dist[v])
 

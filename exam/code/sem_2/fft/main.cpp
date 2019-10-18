@@ -6,7 +6,6 @@ using namespace std;
 
 typedef complex<double> cd;
 
-
 vector<cd> fft(vector<cd> &a) {
 
     int n = a.size();
@@ -14,13 +13,10 @@ vector<cd> fft(vector<cd> &a) {
 
     vector<cd> w(n);
 
-    //cout << "w:\n";
     for (int k = 0; k < n; ++k) {
         double alpha = (2 * M_PI * k) / n;
         w[k] = cd(round(cos(alpha)), round(sin(alpha)));
-        //cout << w[k] << " ";
     }
-    //cout << "\n";
 
     vector<cd> a_0(n / 2), a_1(n / 2);
 
