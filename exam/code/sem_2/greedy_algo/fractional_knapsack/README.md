@@ -1,9 +1,9 @@
 ### fractional knapsack problem
 
 checker:  
-[https://practice.geeksforgeeks.org/problems/fractional-knapsack/0](https://practice.geeksforgeeks.org/problems/fractional-knapsack/0)
+[https://practice.geeksforgeeks.org/problems/fractional-knapsack/0](https://practice.geeksforgeeks.org/problems/fractional-knapsack/0)  
 docs:  
-[https://www.geeksforgeeks.org/fractional-knapsack-problem/](https://www.geeksforgeeks.org/fractional-knapsack-problem/)
+[https://www.geeksforgeeks.org/fractional-knapsack-problem/](https://www.geeksforgeeks.org/fractional-knapsack-problem/)  
 
 #### Complexity
 Time Complexity: O(N * LogN)    

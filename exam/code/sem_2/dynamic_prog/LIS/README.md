@@ -1,7 +1,7 @@
 this code to solve the problem:  
-[https://practice.geeksforgeeks.org/problems/longest-increasing-subsequence/0]
+[https://practice.geeksforgeeks.org/problems/longest-increasing-subsequence/0]  
 docs:  
-[https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/]
+[https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/]  
 
 ### Given:  
 T - test cases  

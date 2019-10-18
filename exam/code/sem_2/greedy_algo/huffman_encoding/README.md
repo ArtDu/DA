@@ -1,7 +1,7 @@
-checker:
-[https://practice.geeksforgeeks.org/problems/huffman-encoding/0]
-docs:
-[https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/]
+checker:  
+[https://practice.geeksforgeeks.org/problems/huffman-encoding/0]  
+docs:  
+[https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/]  
 
 ### Given:  
 T - test cases  

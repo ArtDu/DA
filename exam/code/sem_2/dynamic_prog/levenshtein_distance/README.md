@@ -1,7 +1,7 @@
 checker:  
-[https://practice.geeksforgeeks.org/problems/edit-distance/0](https://practice.geeksforgeeks.org/problems/edit-distance/0)
+[https://practice.geeksforgeeks.org/problems/edit-distance/0](https://practice.geeksforgeeks.org/problems/edit-distance/0)  
 docs:  
-[https://www.geeksforgeeks.org/edit-distance-dp-5/](https://www.geeksforgeeks.org/edit-distance-dp-5/)
+[https://www.geeksforgeeks.org/edit-distance-dp-5/](https://www.geeksforgeeks.org/edit-distance-dp-5/)  
 
 ### Given:  
 T - test cases  

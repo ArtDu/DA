@@ -1,7 +1,7 @@
 this code to solve the problem:  
-[https://practice.geeksforgeeks.org/problems/longest-common-increasing-subsequence/0]
+[https://practice.geeksforgeeks.org/problems/longest-common-increasing-subsequence/0]  
 docs:  
-[https://www.geeksforgeeks.org/longest-common-increasing-subsequence-lcs-lis/]
+[https://www.geeksforgeeks.org/longest-common-increasing-subsequence-lcs-lis/]  
 
 ### Given:  
 T - test cases  
