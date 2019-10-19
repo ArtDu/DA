@@ -1,3 +1,17 @@
+# docs:
+# https://www.geeksforgeeks.org/dijkstras-algorithm-for-adjacency-list-representation-greedy-algo-8/
+# problem:
+# https://practice.geeksforgeeks.org/problems/shortest-path-from-1-to-n/0
+
+
+"""
+for test:
+2
+9
+4
+
+"""
+
 from collections import defaultdict
 
 maxint = 2 ** 32
@@ -9,16 +23,16 @@ class Edge:
         self.weight = weight
 
 
-def relax(spt_set, dist, src, to, weight):
-    if dist[to] > dist[src] + weight and spt_set[to] == False:
+def relax(min_set, dist, src, to, weight):
+    if not min_set[to] and dist[to] > dist[src] + weight:
         dist[to] = dist[src] + weight
 
 
-def find_min(spt_set, dist, V):
+def find_min(min_set, dist, V):
     m = maxint
     m_index = -1
     for v in range(V):
-        if spt_set[v] == False and dist[v] < m:
+        if not min_set[v] and dist[v] < m:
             m = dist[v]
             m_index = v
     return m_index
@@ -33,17 +47,16 @@ def print_dist(dist, V):
 def dijkstra(edges, V, s):
     dist = [maxint for _ in range(V)]
     dist[s] = 0
-    spt_set = [False for _ in range(V)]  # shortest path tree set
+    min_set = [False for _ in range(V)]  # the vertices which we don't look
 
     for _ in range(V):
-        v = find_min(spt_set, dist, V)
+        u = find_min(min_set, dist, V)
 
-        spt_set[v] = True
+        min_set[u] = True
 
-        for i in edges[v]:
-            relax(spt_set, dist, v, i.to, i.weight)
+        for v in edges[u]:
+            relax(min_set, dist, u, v.to, v.weight)
 
-    # print_dist(dist, V)
     print(dist[n])
 
 
@@ -60,12 +73,3 @@ if __name__ == "__main__":
             if j <= n:
                 edges[i].append(Edge(j, 1))
         dijkstra(edges, n + 1, 1)
-
-    # N, M, S = list(map(int, input().split()))
-    # edges = defaultdict(list)
-    # for _ in range(M):
-    #     src, to, weight = list(map(int, input().split()))
-    #     edges[src].append(Edge(to, weight))
-    #     edges[to].append(Edge(src, weight))
-    #
-    # dijkstra(edges, N, S)

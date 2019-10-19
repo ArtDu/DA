@@ -1,4 +1,4 @@
-import sys
+# O(V^3)
 
 
 def floyd_warshall(w):
@@ -25,6 +25,7 @@ if __name__ == "__main__":
 
     floyd_warshall(W)
 
+# for test:
 #
 # 5
 # 0 3 8 9223372036854775807 -4

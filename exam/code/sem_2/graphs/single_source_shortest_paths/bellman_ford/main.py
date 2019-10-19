@@ -2,6 +2,9 @@
 # https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23/
 # problem(exist in graph negative cycle?):
 # https://practice.geeksforgeeks.org/problems/negative-weight-cycle/0
+#
+# time complexity: O(V * E)
+#
 
 
 class Edge_b_f:
@@ -17,19 +20,17 @@ def relax(dist, u, v, w):
 
 
 def bellman_ford(v_nums, edges):
-    # Step 1: Initialize distances from src to all other vertices
-    # as INFINITE
     dist = [2 ** 32] * (v_nums + 1)
     dist[0] = 0
 
-    # Step 2: Relax all edges |V| - 1 times. A simple shortest
+    # Relax all edges |V| - 1 times. A simple shortest
     # path from src to any other vertex can have at-most |V| - 1
     # edges
-    for _ in range(v_nums - 1):
-        for edge in edges:
+    for _ in range(v_nums - 1):  # O(V)
+        for edge in edges: # O(E)
             relax(dist, edge.src, edge.to, edge.weight)
 
-    # Step 3: check for negative-weight cycles.  The above step
+    # Check for negative-weight cycles.  The above step
     # guarantees shortest distances if graph doesn't contain
     # negative weight cycle.  If we get a shorter path, then there
     # is a cycle.

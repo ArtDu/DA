@@ -2,9 +2,30 @@
 # path algorithm for adjacency
 # list representation of graph
 
+# docs:
+# https://www.geeksforgeeks.org/dijkstras-algorithm-for-adjacency-list-representation-greedy-algo-8/
+# problem:
+# https://practice.geeksforgeeks.org/problems/shortest-path-from-1-to-n/0
+
+
+"""
+
+
+
+Complexity: O(E * LogV)
+E - we look each edge in graph and execute decrease_key
+LogV - decrease_key operation in binary heap
+
+for test:
+2
+9
+4
+
+"""
+
 from collections import defaultdict
 
-maxint = 2 ** 31
+maxint = 2 ** 32
 
 
 class HeapItem:
@@ -38,7 +59,6 @@ class Heap:
 
         if smallest != idx:
             self.swap_heap_node(self.array[smallest].pos_in_graph, self.array[idx].pos_in_graph, smallest, idx)
-
             self.heapify(smallest)
 
     def swap_heap_node(self, fst_graph_pos, snd_graph_pos, fst_heap_pos, snd_heap_pos):
@@ -73,7 +93,7 @@ class Heap:
         # replace minimum with the last element
         self.pos[minimum.pos_in_graph] = self.size - 1
         self.pos[last.pos_in_graph] = 0
-        self.array[0] = self.array[self.size - 1]
+        self.array[0] = last
         # delete last element
         self.size -= 1
 

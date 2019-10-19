@@ -1,3 +1,6 @@
+# code not complete
+# O(V*VLogV)
+
 from collections import defaultdict
 
 maxint = 2 ** 31
@@ -28,15 +31,7 @@ def bellman_ford(v_nums, edges):
         for edge in edges:
             relax(dist, edge.src, edge.to, edge.weight)
 
-    # Step 3: check for negative-weight cycles.  The above step
-    # guarantees shortest distances if graph doesn't contain
-    # negative weight cycle.  If we get a shorter path, then there
-    # is a cycle.
-    for i in edges:
-        if dist[i.to] > dist[i.src] + i.weight:
-            return False
-
-    return True  # true - no negative loops
+    return dist
 
 
 class HeapItem:
@@ -149,8 +144,47 @@ def dijkstra(edges, n, s):
     return dist
 
 
-def johnson(edges, n, s):
-    pass
+def johnson(edges, n):
+    edges_b_f = []
+    for v in range(1, n + 1):
+        edges_b_f.append(Edge_b_f(0, v, 0))
+
+    for u in range(1, n + 1):
+        for v in edges[u]:
+            edges_b_f.append(Edge_b_f(u, v.to, v.weight))
+
+    h = bellman_ford(n, edges_b_f)
+
+    for u in range(1, n + 1):
+        for v in edges[u]:
+            v.weight = v.weight + h[u] - h[v.to]
+
+    # print all changed edges
+    for u in range(1, n + 1):
+        print(u, end=": ")
+        for v in edges[u]:
+            print(v.to, v.weight, sep=", ", end="; ")
+        print()
+
+    #  use djkstra for all v
+
+
+"""
+for test:
+
+1
+5 8
+1 2 3
+1 3 8
+1 5 -4
+2 5 7
+2 4 1 
+3 2 4
+4 3 -5
+5 4 6
+
+"""
+
 
 def main():
     t = int(input())
@@ -159,13 +193,12 @@ def main():
         edges = defaultdict(list)
         for _ in range(m):
             src, to, weight = list(map(int, input().split()))
-            edges[src - 1].append(Edge(to - 1, weight))
-            edges[to - 1].append(Edge(src - 1, weight))
+            edges[src].append(Edge(to, weight))
 
         dist = johnson(edges, n)
 
-        ans = ' '.join(map(str, dist))
-        print(ans)
+        # ans = ' '.join(map(str, dist))
+        # print(ans)
 
 
 if __name__ == "__main__":

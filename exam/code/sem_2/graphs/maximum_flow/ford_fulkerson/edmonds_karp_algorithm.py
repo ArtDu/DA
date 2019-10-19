@@ -1,5 +1,7 @@
 # Python program for implementation of Ford Fulkerson algorithm
 
+# O(V * E ^ 2)
+
 from collections import defaultdict
 
 
